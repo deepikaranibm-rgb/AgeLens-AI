@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgeLens AI - Predictor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .navbar {
+            background: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .nav-btn-secondary {
+            color: #666;
+        }
+
+        .nav-btn-logout {
+            background: #dc3545;
+            color: white;
+        }
+
+        .language-switcher {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .lang-btn {
+            padding: 0.3rem 0.8rem;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .lang-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .user-info {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .user-info a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+
+        .user-info a:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .health-form {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-section {
+            margin-bottom: 35px;
+            padding-bottom: 25px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .form-section h2 {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-section h2::before {
+            content: '';
+            width: 4px;
+            height: 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group input:hover,
+        .form-group select:hover {
+            border-color: #667eea;
+        }
+
+        .form-group small {
+            display: block;
+            margin-top: 5px;
+            color: #999;
+            font-size: 12px;
+        }
+
+        .predict-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .predict-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            .health-form {
+                padding: 25px;
+            }
+            .header h1 {
+                font-size: 1.8em;
+            }
+            .form-section h2 {
+                font-size: 1.3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo" id="logoText">🧬 AgeLens AI</div>
+        <div class="nav-links">
+            <a href="/dashboard" class="nav-btn nav-btn-secondary" id="dashboardText">📊 Dashboard</a>
+            <div class="language-switcher">
+                <button class="lang-btn" data-lang="en" onclick="changeLanguage('en')">🇬🇧 English</button>
+                <button class="lang-btn" data-lang="kn" onclick="changeLanguage('kn')">🇮🇳 ಕನ್ನಡ</button>
+                <button class="lang-btn" data-lang="hi" onclick="changeLanguage('hi')">🇮🇳 हिंदी</button>
+            </div>
+            <a href="/logout" class="nav-btn nav-btn-logout" id="logoutText">🚪 Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1 id="mainTitle">🧬 AgeLens AI</h1>
+            <p id="subtitleText">Discover how your lifestyle affects your biological age</p>
+            {% if username %}
+            <div class="user-info">
+                <span id="welcomeText">Welcome,</span> {{ username }}! 
+                <a href="/dashboard" id="dashboardLink">📊 Dashboard</a> | 
+                <a href="/logout" id="logoutLink">🚪 Logout</a>
+            </div>
+            {% endif %}
+        </div>
+        
+        <form action="/predictor" method="POST" class="health-form">
+            <div class="form-section">
+                <h2 id="basicTitle">📊 Basic Information</h2>
+                <div class="form-group">
+                    <label id="ageLabel" for="age">Chronological Age (years):</label>
+                    <input type="number" id="age" name="age" required min="20" max="100" step="1" placeholder="e.g., 35">
+                    <small id="ageSmall">Your actual age</small>
+                </div>
+                
+                <div class="form-group">
+                    <label id="bmiLabel" for="bmi">BMI (Body Mass Index):</label>
+                    <input type="number" id="bmi" name="bmi" required step="0.1" min="15" max="50" placeholder="e.g., 22.5">
+                    <small id="bmiSmall">Weight(kg) / height(m)² | Normal: 18.5-24.9</small>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h2 id="lifestyleTitle">💤 Lifestyle Habits</h2>
+                <div class="form-group">
+                    <label id="sleepLabel" for="sleep">Average Sleep (hours/day):</label>
+                    <input type="number" id="sleep" name="sleep" required step="0.5" min="4" max="12" placeholder="e.g., 7.5">
+                    <small id="sleepSmall">Recommended: 7-9 hours</small>
+                </div>
+                
+                <div class="form-group">
+                    <label id="exerciseLabel" for="exercise">Exercise Frequency (days/week):</label>
+                    <input type="number" id="exercise" name="exercise" required min="0" max="7" placeholder="e.g., 3">
+                    <small id="exerciseSmall">Recommended: 3-5 days</small>
+                </div>
+                
+                <div class="form-group">
+                    <label id="smokingLabel" for="smoking">Smoking:</label>
+                    <select id="smoking" name="smoking" required>
+                        <option value="0" id="smokingNo">Non-smoker</option>
+                        <option value="1" id="smokingYes">Smoker</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label id="alcoholLabel" for="alcohol">Alcohol Consumption (drinks/week):</label>
+                    <input type="number" id="alcohol" name="alcohol" required min="0" max="50" placeholder="e.g., 5">
+                    <small id="alcoholSmall">Moderate: 1-14 drinks/week</small>
+                </div>
+                
+                <div class="form-group">
+                    <label id="stressLabel" for="stress">Stress Level (1-10):</label>
+                    <input type="number" id="stress" name="stress" required min="1" max="10" step="1" placeholder="e.g., 5">
+                    <small id="stressSmall">1=Low stress, 10=High stress</small>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h2 id="healthTitle">❤️ Health Markers</h2>
+                <div class="form-group">
+                    <label id="systolicLabel" for="systolic_bp">Systolic BP (mmHg):</label>
+                    <input type="number" id="systolic_bp" name="systolic_bp" required min="90" max="200" placeholder="e.g., 120">
+                    <small id="systolicSmall">Normal: 90-120 mmHg</small>
+                </div>
+                
+                <div class="form-group">
+                    <label id="diastolicLabel" for="diastolic_bp">Diastolic BP (mmHg):</label>
+                    <input type="number" id="diastolic_bp" name="diastolic_bp" required min="60" max="120" placeholder="e.g., 80">
+                    <small id="diastolicSmall">Normal: 60-80 mmHg</small>
+                </div>
+            </div>
+            
+            <button type="submit" class="predict-btn" id="predictBtn">🔮 Predict Biological Age</button>
+        </form>
+    </div>
+
+    <script>
+        // Translations for English, Kannada, Hindi (no Telugu)
+        var translations = {
+            en: {
+                logo: "🧬 AgeLens AI", dashboard: "📊 Dashboard", logout: "🚪 Logout",
+                title: "🧬 AgeLens AI", subtitle: "Discover how your lifestyle affects your biological age", welcome: "Welcome,",
+                basic: "📊 Basic Information", age: "Chronological Age (years):", ageSmall: "Your actual age",
+                bmi: "BMI (Body Mass Index):", bmiSmall: "Weight(kg) / height(m)² | Normal: 18.5-24.9",
+                lifestyle: "💤 Lifestyle Habits", sleep: "Average Sleep (hours/day):", sleepSmall: "Recommended: 7-9 hours",
+                exercise: "Exercise Frequency (days/week):", exerciseSmall: "Recommended: 3-5 days",
+                smoking: "Smoking:", smokingNo: "Non-smoker", smokingYes: "Smoker",
+                alcohol: "Alcohol Consumption (drinks/week):", alcoholSmall: "Moderate: 1-14 drinks/week",
+                stress: "Stress Level (1-10):", stressSmall: "1=Low stress, 10=High stress",
+                health: "❤️ Health Markers", systolic: "Systolic BP (mmHg):", systolicSmall: "Normal: 90-120 mmHg",
+                diastolic: "Diastolic BP (mmHg):", diastolicSmall: "Normal: 60-80 mmHg",
+                predict: "🔮 Predict Biological Age"
+            },
+            kn: {
+                logo: "🧬 ಏಜ್ಲೆನ್ಸ್ ಎಐ", dashboard: "📊 ಡ್ಯಾಶ್ಬೋರ್ಡ್", logout: "🚪 ನಿರ್ಗಮಿಸಿ",
+                title: "🧬 ಏಜ್ಲೆನ್ಸ್ ಎಐ", subtitle: "ನಿಮ್ಮ ಜೀವನಶೈಲಿ ನಿಮ್ಮ ಜೈವಿಕ ವಯಸ್ಸಿನ ಮೇಲೆ ಹೇಗೆ ಪರಿಣಾಮ ಬೀರುತ್ತದೆ ಎಂಬುದನ್ನು ಕಂಡುಕೊಳ್ಳಿ", welcome: "ಸ್ವಾಗತ,",
+                basic: "📊 ಮೂಲ ಮಾಹಿತಿ", age: "ಕಾಲಾನುಕ್ರಮದ ವಯಸ್ಸು (ವರ್ಷಗಳು):", ageSmall: "ನಿಮ್ಮ ನಿಜವಾದ ವಯಸ್ಸು",
+                bmi: "ಬಿಎಂಐ (ದೇಹದ ದ್ರವ್ಯರಾಶಿ ಸೂಚ್ಯಂಕ):", bmiSmall: "ತೂಕ(ಕೆಜಿ) / ಎತ್ತರ(ಮೀ)² | ಸಾಮಾನ್ಯ: 18.5-24.9",
+                lifestyle: "💤 ಜೀವನಶೈಲಿ ಅಭ್ಯಾಸಗಳು", sleep: "ಸರಾಸರಿ ನಿದ್ರೆ (ಗಂಟೆಗಳು/ದಿನ):", sleepSmall: "ಶಿಫಾರಸು: 7-9 ಗಂಟೆಗಳು",
+                exercise: "ವ್ಯಾಯಾಮದ ಆವರ್ತನ (ದಿನಗಳು/ವಾರ):", exerciseSmall: "ಶಿಫಾರಸು: 3-5 ದಿನಗಳು",
+                smoking: "ಧೂಮಪಾನ:", smokingNo: "ಧೂಮಪಾನ ಮಾಡುವುದಿಲ್ಲ", smokingYes: "ಧೂಮಪಾನಿ",
+                alcohol: "ಮದ್ಯಪಾನ (ಪಾನೀಯಗಳು/ವಾರ):", alcoholSmall: "ಮಧ್ಯಮ: 1-14 ಪಾನೀಯಗಳು/ವಾರ",
+                stress: "ಒತ್ತಡದ ಮಟ್ಟ (1-10):", stressSmall: "1=ಕಡಿಮೆ ಒತ್ತಡ, 10=ಹೆಚ್ಚಿನ ಒತ್ತಡ",
+                health: "❤️ ಆರೋಗ್ಯ ಗುರುತುಗಳು", systolic: "ಸಿಸ್ಟೊಲಿಕ್ ರಕ್ತದೊತ್ತಡ (mmHg):", systolicSmall: "ಸಾಮಾನ್ಯ: 90-120 mmHg",
+                diastolic: "ಡಯಾಸ್ಟೊಲಿಕ್ ರಕ್ತದೊತ್ತಡ (mmHg):", diastolicSmall: "ಸಾಮಾನ್ಯ: 60-80 mmHg",
+                predict: "🔮 ಜೈವಿಕ ವಯಸ್ಸನ್ನು ಊಹಿಸಿ"
+            },
+            hi: {
+                logo: "🧬 एजलेंस एआई", dashboard: "📊 डैशबोर्ड", logout: "🚪 लॉगआउट",
+                title: "🧬 एजलेंस एआई", subtitle: "जानें कि आपकी जीवनशैली आपकी जैविक आयु को कैसे प्रभावित करती है", welcome: "स्वागत है,",
+                basic: "📊 मूल जानकारी", age: "कालानुक्रमिक आयु (वर्ष):", ageSmall: "आपकी वास्तविक आयु",
+                bmi: "बीएमआई (बॉडी मास इंडेक्स):", bmiSmall: "वजन(किग्रा) / ऊंचाई(मी)² | सामान्य: 18.5-24.9",
+                lifestyle: "💤 जीवनशैली की आदतें", sleep: "औसत नींद (घंटे/दिन):", sleepSmall: "अनुशंसित: 7-9 घंटे",
+                exercise: "व्यायाम आवृत्ति (दिन/सप्ताह):", exerciseSmall: "अनुशंसित: 3-5 दिन",
+                smoking: "धूम्रपान:", smokingNo: "धूम्रपान नहीं करते", smokingYes: "धूम्रपान करते हैं",
+                alcohol: "शराब का सेवन (पेय/सप्ताह):", alcoholSmall: "मध्यम: 1-14 पेय/सप्ताह",
+                stress: "तनाव स्तर (1-10):", stressSmall: "1=कम तनाव, 10=उच्च तनाव",
+                health: "❤️ स्वास्थ्य संकेतक", systolic: "सिस्टोलिक रक्तचाप (mmHg):", systolicSmall: "सामान्य: 90-120 mmHg",
+                diastolic: "डायस्टोलिक रक्तचाप (mmHg):", diastolicSmall: "सामान्य: 60-80 mmHg",
+                predict: "🔮 जैविक आयु की भविष्यवाणी करें"
+            }
+        };
+
+        var currentLang = localStorage.getItem('lang') || 'en';
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            var t = translations[lang];
+            
+            // Navbar elements
+            document.getElementById('logoText').innerHTML = t.logo;
+            document.getElementById('dashboardText').innerHTML = t.dashboard;
+            document.getElementById('logoutText').innerHTML = t.logout;
+            
+            // Header elements
+            document.getElementById('mainTitle').innerHTML = t.title;
+            document.getElementById('subtitleText').innerHTML = t.subtitle;
+            if(document.getElementById('welcomeText')) document.getElementById('welcomeText').innerHTML = t.welcome;
+            if(document.getElementById('dashboardLink')) document.getElementById('dashboardLink').innerHTML = t.dashboard;
+            if(document.getElementById('logoutLink')) document.getElementById('logoutLink').innerHTML = t.logout;
+            
+            // Form sections
+            document.getElementById('basicTitle').innerHTML = t.basic;
+            document.getElementById('ageLabel').innerHTML = t.age;
+            document.getElementById('ageSmall').innerHTML = t.ageSmall;
+            document.getElementById('bmiLabel').innerHTML = t.bmi;
+            document.getElementById('bmiSmall').innerHTML = t.bmiSmall;
+            document.getElementById('lifestyleTitle').innerHTML = t.lifestyle;
+            document.getElementById('sleepLabel').innerHTML = t.sleep;
+            document.getElementById('sleepSmall').innerHTML = t.sleepSmall;
+            document.getElementById('exerciseLabel').innerHTML = t.exercise;
+            document.getElementById('exerciseSmall').innerHTML = t.exerciseSmall;
+            document.getElementById('smokingLabel').innerHTML = t.smoking;
+            document.getElementById('smokingNo').innerHTML = t.smokingNo;
+            document.getElementById('smokingYes').innerHTML = t.smokingYes;
+            document.getElementById('alcoholLabel').innerHTML = t.alcohol;
+            document.getElementById('alcoholSmall').innerHTML = t.alcoholSmall;
+            document.getElementById('stressLabel').innerHTML = t.stress;
+            document.getElementById('stressSmall').innerHTML = t.stressSmall;
+            document.getElementById('healthTitle').innerHTML = t.health;
+            document.getElementById('systolicLabel').innerHTML = t.systolic;
+            document.getElementById('systolicSmall').innerHTML = t.systolicSmall;
+            document.getElementById('diastolicLabel').innerHTML = t.diastolic;
+            document.getElementById('diastolicSmall').innerHTML = t.diastolicSmall;
+            document.getElementById('predictBtn').innerHTML = t.predict;
+            
+            // Update active button
+            document.querySelectorAll('.lang-btn').forEach(function(btn) {
+                btn.classList.remove('active');
+                if(btn.getAttribute('data-lang') === lang) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            changeLanguage(currentLang);
+        });
+    </script>
+</body>
+</html>

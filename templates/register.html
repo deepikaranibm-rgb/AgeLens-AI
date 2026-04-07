@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - AgeLens AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .register-container {
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .register-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .language-switcher {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 0.5rem;
+            z-index: 10;
+        }
+
+        .lang-btn {
+            padding: 0.3rem 0.8rem;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .lang-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .lang-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            font-size: 2.2em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group label .required {
+            color: #dc3545;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group input.error {
+            border-color: #dc3545;
+        }
+
+        .form-group input.valid {
+            border-color: #28a745;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .success-message {
+            color: #28a745;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .password-strength {
+            margin-top: 8px;
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s, background 0.3s;
+        }
+
+        .strength-text {
+            font-size: 11px;
+            margin-top: 5px;
+            color: #666;
+        }
+
+        .password-field {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #999;
+            font-size: 18px;
+        }
+
+        .toggle-password:hover {
+            color: #667eea;
+        }
+
+        .terms-group {
+            margin: 20px 0;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .checkbox-label input {
+            width: auto;
+            cursor: pointer;
+        }
+
+        .checkbox-label a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .checkbox-label a:hover {
+            text-decoration: underline;
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .register-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .register-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            color: #666;
+        }
+
+        .login-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .register-btn.loading {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .register-btn.loading .btn-text {
+            display: none;
+        }
+
+        .register-btn.loading .spinner {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="language-switcher">
+            <button class="lang-btn" data-lang="en" onclick="changeLanguage('en')">🇬🇧 English</button>
+            <button class="lang-btn" data-lang="kn" onclick="changeLanguage('kn')">🇮🇳 ಕನ್ನಡ</button>
+            <button class="lang-btn" data-lang="hi" onclick="changeLanguage('hi')">🇮🇳 हिंदी</button>
+        </div>
+        <div class="register-card">
+            <div class="logo">
+                <h1 id="title">🧬 AgeLens AI</h1>
+                <p id="subtitle">Join us to track your biological age</p>
+            </div>
+
+            <div id="alert" class="alert"></div>
+
+            <form id="registerForm">
+                <div class="form-group">
+                    <label id="usernameLabel" for="username">Username <span class="required">*</span></label>
+                    <input type="text" id="username" name="username" required placeholder="Choose a username" onkeyup="validateUsername()">
+                    <div class="error-message" id="usernameError">Username must be at least 3 characters</div>
+                    <div class="success-message" id="usernameSuccess">✓ Username available</div>
+                </div>
+
+                <div class="form-group">
+                    <label id="emailLabel" for="email">Email <span class="required">*</span></label>
+                    <input type="email" id="email" name="email" required placeholder="Enter your email" onkeyup="validateEmail()">
+                    <div class="error-message" id="emailError">Enter a valid email address</div>
+                    <div class="success-message" id="emailSuccess">✓ Valid email</div>
+                </div>
+
+                <div class="form-group">
+                    <label id="passwordLabel" for="password">Password <span class="required">*</span></label>
+                    <div class="password-field">
+                        <input type="password" id="password" name="password" required placeholder="Min. 6 characters" onkeyup="validatePassword()">
+                        <span class="toggle-password" onclick="togglePassword('password')">👁️</span>
+                    </div>
+                    <div class="password-strength">
+                        <div class="strength-bar" id="strengthBar"></div>
+                    </div>
+                    <div class="strength-text" id="strengthText"></div>
+                    <div class="error-message" id="passwordError">Password must be at least 6 characters</div>
+                </div>
+
+                <div class="form-group">
+                    <label id="confirmLabel" for="confirm_password">Confirm Password <span class="required">*</span></label>
+                    <div class="password-field">
+                        <input type="password" id="confirm_password" name="confirm_password" required placeholder="Re-enter password" onkeyup="validateConfirmPassword()">
+                        <span class="toggle-password" onclick="togglePassword('confirm_password')">👁️</span>
+                    </div>
+                    <div class="error-message" id="confirmError">Passwords do not match</div>
+                    <div class="success-message" id="confirmSuccess">✓ Passwords match</div>
+                </div>
+
+                <div class="terms-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="terms" required>
+                        <span id="termsText">I agree to the</span> <a href="#" onclick="showTerms(event)" id="termsLink">Terms of Service</a> <span id="andText">and</span> <a href="#" onclick="showPrivacy(event)" id="privacyLink">Privacy Policy</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="register-btn" id="registerBtn">
+                    <span class="btn-text" id="registerBtnText">✅ Create Account</span>
+                    <div class="spinner"></div>
+                </button>
+            </form>
+
+            <div class="login-link">
+                <span id="alreadyText">Already have an account?</span> <a href="/login" id="loginHereText">Login here</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var translations = {
+            en: {
+                title: "🧬 AgeLens AI", subtitle: "Join us to track your biological age",
+                usernameLabel: "Username", emailLabel: "Email", passwordLabel: "Password", confirmLabel: "Confirm Password",
+                usernameError: "Username must be at least 3 characters", usernameSuccess: "✓ Username available",
+                emailError: "Enter a valid email address", emailSuccess: "✓ Valid email",
+                passwordError: "Password must be at least 6 characters",
+                confirmError: "Passwords do not match", confirmSuccess: "✓ Passwords match",
+                termsText: "I agree to the", termsLink: "Terms of Service", andText: "and", privacyLink: "Privacy Policy",
+                registerBtn: "✅ Create Account", alreadyText: "Already have an account?", loginHereText: "Login here",
+                weakPass: "⚠️ Weak password", mediumPass: "📈 Medium password", strongPass: "✅ Strong password",
+                termsAlert: "Please agree to the Terms of Service", fillError: "Please fill all fields correctly",
+                existsError: "Username or email already exists!", regError: "Registration failed. Please try again.",
+                networkError: "Network error. Please make sure the server is running.",
+                success: "Registration Successful! Redirecting to login..."
+            },
+            kn: {
+                title: "🧬 ಏಜ್ಲೆನ್ಸ್ ಎಐ", subtitle: "ನಿಮ್ಮ ಜೈವಿಕ ವಯಸ್ಸನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಲು ನಮಗೆ ಸೇರಿ",
+                usernameLabel: "ಬಳಕೆದಾರಹೆಸರು", emailLabel: "ಇಮೇಲ್", passwordLabel: "ಪಾಸ್ವರ್ಡ್", confirmLabel: "ಪಾಸ್ವರ್ಡ್ ದೃಢೀಕರಿಸಿ",
+                usernameError: "ಬಳಕೆದಾರಹೆಸರು ಕನಿಷ್ಠ 3 ಅಕ್ಷರಗಳಾಗಿರಬೇಕು", usernameSuccess: "✓ ಬಳಕೆದಾರಹೆಸರು ಲಭ್ಯವಿದೆ",
+                emailError: "ಮಾನ್ಯ ಇಮೇಲ್ ವಿಳಾಸವನ್ನು ನಮೂದಿಸಿ", emailSuccess: "✓ ಮಾನ್ಯ ಇಮೇಲ್",
+                passwordError: "ಪಾಸ್ವರ್ಡ್ ಕನಿಷ್ಠ 6 ಅಕ್ಷರಗಳಾಗಿರಬೇಕು",
+                confirmError: "ಪಾಸ್ವರ್ಡ್ಗಳು ಹೊಂದಾಣಿಕೆಯಾಗುತ್ತಿಲ್ಲ", confirmSuccess: "✓ ಪಾಸ್ವರ್ಡ್ಗಳು ಹೊಂದಾಣಿಕೆಯಾಗುತ್ತವೆ",
+                termsText: "ನಾನು ಒಪ್ಪುತ್ತೇನೆ", termsLink: "ಸೇವಾ ನಿಯಮಗಳು", andText: "ಮತ್ತು", privacyLink: "ಗೌಪ್ಯತಾ ನೀತಿ",
+                registerBtn: "✅ ಖಾತೆಯನ್ನು ರಚಿಸಿ", alreadyText: "ಈಗಾಗಲೇ ಖಾತೆ ಇದೆಯೇ?", loginHereText: "ಇಲ್ಲಿ ಲಾಗಿನ್ ಮಾಡಿ",
+                weakPass: "⚠️ ದುರ್ಬಲ ಪಾಸ್ವರ್ಡ್", mediumPass: "📈 ಮಧ್ಯಮ ಪಾಸ್ವರ್ಡ್", strongPass: "✅ ಬಲವಾದ ಪಾಸ್ವರ್ಡ್",
+                termsAlert: "ದಯವಿಟ್ಟು ಸೇವಾ ನಿಯಮಗಳನ್ನು ಒಪ್ಪಿಕೊಳ್ಳಿ", fillError: "ದಯವಿಟ್ಟು ಎಲ್ಲಾ ಕ್ಷೇತ್ರಗಳನ್ನು ಸರಿಯಾಗಿ ಭರ್ತಿ ಮಾಡಿ",
+                existsError: "ಬಳಕೆದಾರಹೆಸರು ಅಥವಾ ಇಮೇಲ್ ಈಗಾಗಲೇ ಅಸ್ತಿತ್ವದಲ್ಲಿದೆ!", regError: "ನೋಂದಣಿ ವಿಫಲವಾಗಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+                networkError: "ನೆಟ್ವರ್ಕ್ ದೋಷ. ಸರ್ವರ್ ಚಾಲನೆಯಲ್ಲಿದೆಯೇ ಎಂದು ದಯವಿಟ್ಟು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ.",
+                success: "ನೋಂದಣಿ ಯಶಸ್ವಿಯಾಗಿದೆ! ಲಾಗಿನ್ ಪುಟಕ್ಕೆ ಪುನರ್ನಿರ್ದೇಶಿಸಲಾಗುತ್ತಿದೆ..."
+            },
+            hi: {
+                title: "🧬 एजलेंस एआई", subtitle: "अपनी जैविक आयु को ट्रैक करने के लिए हमसे जुड़ें",
+                usernameLabel: "उपयोगकर्ता नाम", emailLabel: "ईमेल", passwordLabel: "पासवर्ड", confirmLabel: "पासवर्ड की पुष्टि करें",
+                usernameError: "उपयोगकर्ता नाम कम से कम 3 अक्षर का होना चाहिए", usernameSuccess: "✓ उपयोगकर्ता नाम उपलब्ध है",
+                emailError: "एक मान्य ईमेल पता दर्ज करें", emailSuccess: "✓ मान्य ईमेल",
+                passwordError: "पासवर्ड कम से कम 6 अक्षर का होना चाहिए",
+                confirmError: "पासवर्ड मेल नहीं खाते", confirmSuccess: "✓ पासवर्ड मेल खाते हैं",
+                termsText: "मैं सहमत हूं", termsLink: "सेवा की शर्तें", andText: "और", privacyLink: "गोपनीयता नीति",
+                registerBtn: "✅ खाता बनाएं", alreadyText: "पहले से खाता है?", loginHereText: "यहां लॉगिन करें",
+                weakPass: "⚠️ कमजोर पासवर्ड", mediumPass: "📈 मध्यम पासवर्ड", strongPass: "✅ मजबूत पासवर्ड",
+                termsAlert: "कृपया सेवा की शर्तों से सहमत हों", fillError: "कृपया सभी फ़ील्ड सही ढंग से भरें",
+                existsError: "उपयोगकर्ता नाम या ईमेल पहले से मौजूद है!", regError: "पंजीकरण विफल। कृपया पुनः प्रयास करें।",
+                networkError: "नेटवर्क त्रुटि। कृपया सुनिश्चित करें कि सर्वर चल रहा है।",
+                success: "पंजीकरण सफल! लॉगिन पृष्ठ पर पुनर्निर्देशित किया जा रहा है..."
+            }
+        };
+
+        var currentLang = localStorage.getItem('lang') || 'en';
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            var t = translations[lang];
+            
+            document.getElementById('title').innerHTML = t.title;
+            document.getElementById('subtitle').innerHTML = t.subtitle;
+            document.getElementById('usernameLabel').innerHTML = t.usernameLabel;
+            document.getElementById('emailLabel').innerHTML = t.emailLabel;
+            document.getElementById('passwordLabel').innerHTML = t.passwordLabel;
+            document.getElementById('confirmLabel').innerHTML = t.confirmLabel;
+            document.getElementById('usernameError').innerHTML = t.usernameError;
+            document.getElementById('usernameSuccess').innerHTML = t.usernameSuccess;
+            document.getElementById('emailError').innerHTML = t.emailError;
+            document.getElementById('emailSuccess').innerHTML = t.emailSuccess;
+            document.getElementById('passwordError').innerHTML = t.passwordError;
+            document.getElementById('confirmError').innerHTML = t.confirmError;
+            document.getElementById('confirmSuccess').innerHTML = t.confirmSuccess;
+            document.getElementById('termsText').innerHTML = t.termsText;
+            document.getElementById('termsLink').innerHTML = t.termsLink;
+            document.getElementById('andText').innerHTML = t.andText;
+            document.getElementById('privacyLink').innerHTML = t.privacyLink;
+            document.getElementById('registerBtnText').innerHTML = t.registerBtn;
+            document.getElementById('alreadyText').innerHTML = t.alreadyText;
+            document.getElementById('loginHereText').innerHTML = t.loginHereText;
+            
+            document.querySelectorAll('.lang-btn').forEach(function(btn) {
+                btn.classList.remove('active');
+                if(btn.getAttribute('data-lang') === lang) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            const type = field.type === 'password' ? 'text' : 'password';
+            field.type = type;
+        }
+
+        function showAlert(message, type) {
+            const alert = document.getElementById('alert');
+            alert.textContent = message;
+            alert.className = `alert alert-${type} show`;
+            setTimeout(() => {
+                alert.classList.remove('show');
+            }, 5000);
+        }
+
+        function showSuccessAndRedirect() {
+            const t = translations[currentLang];
+            showAlert(t.success, 'success');
+            setTimeout(function() {
+                window.location.href = '/login';
+            }, 2000);
+        }
+
+        function validateUsername() {
+            const username = document.getElementById('username').value;
+            const errorDiv = document.getElementById('usernameError');
+            const successDiv = document.getElementById('usernameSuccess');
+            const input = document.getElementById('username');
+            
+            if (username.length >= 3) {
+                errorDiv.classList.remove('show');
+                successDiv.classList.add('show');
+                input.classList.add('valid');
+                input.classList.remove('error');
+                return true;
+            } else {
+                errorDiv.classList.add('show');
+                successDiv.classList.remove('show');
+                input.classList.add('error');
+                input.classList.remove('valid');
+                return false;
+            }
+        }
+
+        function validateEmail() {
+            const email = document.getElementById('email').value;
+            const errorDiv = document.getElementById('emailError');
+            const successDiv = document.getElementById('emailSuccess');
+            const input = document.getElementById('email');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (emailRegex.test(email)) {
+                errorDiv.classList.remove('show');
+                successDiv.classList.add('show');
+                input.classList.add('valid');
+                input.classList.remove('error');
+                return true;
+            } else {
+                errorDiv.classList.add('show');
+                successDiv.classList.remove('show');
+                input.classList.add('error');
+                input.classList.remove('valid');
+                return false;
+            }
+        }
+
+        function validatePassword() {
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('passwordError');
+            const strengthBar = document.getElementById('strengthBar');
+            const strengthText = document.getElementById('strengthText');
+            const input = document.getElementById('password');
+            const t = translations[currentLang];
+            
+            let strength = 0;
+            let message = '';
+            
+            if (password.length >= 6) {
+                errorDiv.classList.remove('show');
+                input.classList.add('valid');
+                input.classList.remove('error');
+                strength += 25;
+                
+                if (password.length >= 8) strength += 25;
+                if (/[A-Z]/.test(password)) strength += 25;
+                if (/[0-9]/.test(password)) strength += 25;
+                if (/[^A-Za-z0-9]/.test(password)) strength += 25;
+                
+                strength = Math.min(strength, 100);
+                
+                if (strength < 50) message = t.weakPass;
+                else if (strength < 75) message = t.mediumPass;
+                else message = t.strongPass;
+                
+                strengthBar.style.width = strength + '%';
+                strengthBar.style.background = strength < 50 ? '#dc3545' : (strength < 75 ? '#ffc107' : '#28a745');
+                strengthText.textContent = message;
+                
+                return true;
+            } else {
+                errorDiv.classList.add('show');
+                input.classList.add('error');
+                input.classList.remove('valid');
+                strengthBar.style.width = '0%';
+                strengthText.textContent = '';
+                return false;
+            }
+        }
+
+        function validateConfirmPassword() {
+            const password = document.getElementById('password').value;
+            const confirm = document.getElementById('confirm_password').value;
+            const errorDiv = document.getElementById('confirmError');
+            const successDiv = document.getElementById('confirmSuccess');
+            const input = document.getElementById('confirm_password');
+            
+            if (password === confirm && password !== '') {
+                errorDiv.classList.remove('show');
+                successDiv.classList.add('show');
+                input.classList.add('valid');
+                input.classList.remove('error');
+                return true;
+            } else {
+                errorDiv.classList.add('show');
+                successDiv.classList.remove('show');
+                input.classList.add('error');
+                input.classList.remove('valid');
+                return false;
+            }
+        }
+
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const t = translations[currentLang];
+            
+            const terms = document.getElementById('terms');
+            if (!terms.checked) {
+                showAlert(t.termsAlert, 'error');
+                return;
+            }
+            
+            const isUsernameValid = validateUsername();
+            const isEmailValid = validateEmail();
+            const isPasswordValid = validatePassword();
+            const isConfirmValid = validateConfirmPassword();
+            
+            if (!isUsernameValid || !isEmailValid || !isPasswordValid || !isConfirmValid) {
+                showAlert(t.fillError, 'error');
+                return;
+            }
+            
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            const btn = document.getElementById('registerBtn');
+            btn.classList.add('loading');
+            btn.disabled = true;
+            
+            try {
+                const formData = new URLSearchParams();
+                formData.append('username', username);
+                formData.append('email', email);
+                formData.append('password', password);
+                formData.append('confirm_password', password);
+                
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData
+                });
+                
+                if (response.redirected || response.ok) {
+                    showSuccessAndRedirect();
+                } else {
+                    const text = await response.text();
+                    if (text.includes('already') || text.includes('taken')) {
+                        showAlert(t.existsError, 'error');
+                    } else {
+                        showAlert(t.regError, 'error');
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert(t.networkError, 'error');
+            } finally {
+                btn.classList.remove('loading');
+                btn.disabled = false;
+            }
+        });
+
+        function showTerms(event) {
+            event.preventDefault();
+            alert('Terms of Service:\n\n1. This is for educational purposes\n2. Your data is stored securely\n3. Consult healthcare professionals for medical advice\n4. We respect your privacy');
+        }
+
+        function showPrivacy(event) {
+            event.preventDefault();
+            alert('Privacy Policy:\n\n• Your data is stored locally\n• We do not share your information\n• You can delete your data anytime\n• SSL encrypted connection');
+        }
+
+        changeLanguage(currentLang);
+    </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+# 1. Create project folder
+mkdir biological-age-predictor
+cd biological-age-predictor
+
+# 2. Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# 3. Install dependencies
+pip install flask scikit-learn numpy pandas joblib
+
+# 4. Create the folder structure
+mkdir templates static models
+
+# 5. Copy all the code files above into respective files
+
+# 6. Run the app
+python app.py
+
+# 7. Open browser and go to http://localhost:5500

@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biological Age Predictor - Home</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #666;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: #667eea;
+        }
+
+        .btn-login {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            transition: transform 0.3s;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-register {
+            background: transparent;
+            color: #667eea;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            border: 2px solid #667eea;
+            transition: all 0.3s;
+        }
+
+        .btn-register:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .language-switcher {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .lang-btn {
+            padding: 0.3rem 0.8rem;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .lang-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .lang-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1.2s ease;
+        }
+
+        .btn-hero {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .btn-hero-primary {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-hero-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .btn-hero-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-hero-secondary:hover {
+            background: white;
+            color: #667eea;
+            transform: translateY(-3px);
+        }
+
+        /* Features Section */
+        .features {
+            background: white;
+            padding: 4rem 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 3rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 15px;
+            transition: transform 0.3s;
+            background: #f8f9fa;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .feature-desc {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 4rem 2rem;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .step {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0 auto 1rem;
+        }
+
+        .step-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-desc {
+            color: #666;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 4rem 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .cta-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-text {
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .btn-cta {
+            background: white;
+            color: #667eea;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        /* Simple Footer */
+        .footer {
+            background: #2d3748;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-section {
+            margin-bottom: 1rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .footer-section p {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            .navbar {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo" id="logoText">🧬 AgeLens AI</div>
+        <div class="nav-links">
+            <a href="#home" class="nav-link" id="homeLink">Home</a>
+            <a href="#features" class="nav-link" id="featuresLink">Features</a>
+            <a href="#how-it-works" class="nav-link" id="howItWorksLink">How It Works</a>
+            <div class="language-switcher">
+                <button class="lang-btn" data-lang="en" onclick="changeLanguage('en')">🇬🇧 English</button>
+                <button class="lang-btn" data-lang="kn" onclick="changeLanguage('kn')">🇮🇳 ಕನ್ನಡ</button>
+                <button class="lang-btn" data-lang="hi" onclick="changeLanguage('hi')">🇮🇳 हिंदी</button>
+            </div>
+            <a href="/login" class="btn-login" id="loginBtn">Login</a>
+            <a href="/register" class="btn-register" id="signupBtn">Sign Up</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <h1 id="heroTitle">Discover Your True Biological Age</h1>
+        <p id="heroSubtitle">Your chronological age is just a number. Find out how your lifestyle affects your real age.</p>
+        <div class="hero-buttons">
+            <a href="/register" class="btn-hero btn-hero-primary" id="getStartedBtn">Get Started Free</a>
+            <a href="#how-it-works" class="btn-hero btn-hero-secondary" id="learnMoreBtn">Learn More</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <h2 class="section-title" id="whyChooseUs">Why Choose Us?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🔬</div>
+                <div class="feature-title" id="feature1Title">Science-Based Analysis</div>
+                <div class="feature-desc" id="feature1Desc">Our algorithm is based on latest medical research and validated by health experts.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <div class="feature-title" id="feature2Title">Track Your Progress</div>
+                <div class="feature-desc" id="feature2Desc">Monitor your biological age over time and see how lifestyle changes impact your health.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💡</div>
+                <div class="feature-title" id="feature3Title">Personalized Insights</div>
+                <div class="feature-desc" id="feature3Desc">Get tailored recommendations to improve your health and reduce your biological age.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <div class="feature-title" id="feature4Title">Easy to Use</div>
+                <div class="feature-desc" id="feature4Desc">Simple interface, instant results, and detailed analytics at your fingertips.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <div class="feature-title" id="feature5Title">Private & Secure</div>
+                <div class="feature-desc" id="feature5Desc">Your health data is encrypted and never shared with third parties.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <div class="feature-title" id="feature6Title">Actionable Goals</div>
+                <div class="feature-desc" id="feature6Desc">Set health goals and track your journey to a younger biological age.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="how-it-works">
+        <h2 class="section-title" id="howItWorksTitle">How It Works</h2>
+        <div class="steps-grid">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-title" id="step1Title">Create Account</div>
+                <div class="step-desc" id="step1Desc">Sign up for free and create your health profile.</div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-title" id="step2Title">Enter Health Data</div>
+                <div class="step-desc" id="step2Desc">Provide basic health information like age, BMI, lifestyle habits.</div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-title" id="step3Title">Get Results</div>
+                <div class="step-desc" id="step3Desc">Receive your biological age and personalized recommendations.</div>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-title" id="step4Title">Track Progress</div>
+                <div class="step-desc" id="step4Desc">Monitor changes over time and improve your health.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-title" id="ctaTitle">Ready to Discover Your Biological Age?</div>
+        <div class="cta-text" id="ctaText">Join thousands of users who are taking control of their health journey.</div>
+        <a href="/register" class="btn-cta" id="ctaBtn">Get Started Now →</a>
+    </section>
+
+    <!-- Simple Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 id="footerTitle">🧬 AgeLens AI</h3>
+                <p id="footerText">Helping you understand and improve your health through science-based biological age tracking.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        var translations = {
+            en: {
+                logo: "🧬 AgeLens AI", home: "Home", features: "Features", howItWorks: "How It Works",
+                login: "Login", signup: "Sign Up",
+                heroTitle: "Discover Your True Biological Age",
+                heroSubtitle: "Your chronological age is just a number. Find out how your lifestyle affects your real age.",
+                getStarted: "Get Started Free", learnMore: "Learn More",
+                whyChoose: "Why Choose Us?",
+                f1Title: "Science-Based Analysis", f1Desc: "Our algorithm is based on latest medical research and validated by health experts.",
+                f2Title: "Track Your Progress", f2Desc: "Monitor your biological age over time and see how lifestyle changes impact your health.",
+                f3Title: "Personalized Insights", f3Desc: "Get tailored recommendations to improve your health and reduce your biological age.",
+                f4Title: "Easy to Use", f4Desc: "Simple interface, instant results, and detailed analytics at your fingertips.",
+                f5Title: "Private & Secure", f5Desc: "Your health data is encrypted and never shared with third parties.",
+                f6Title: "Actionable Goals", f6Desc: "Set health goals and track your journey to a younger biological age.",
+                howTitle: "How It Works",
+                s1Title: "Create Account", s1Desc: "Sign up for free and create your health profile.",
+                s2Title: "Enter Health Data", s2Desc: "Provide basic health information like age, BMI, lifestyle habits.",
+                s3Title: "Get Results", s3Desc: "Receive your biological age and personalized recommendations.",
+                s4Title: "Track Progress", s4Desc: "Monitor changes over time and improve your health.",
+                ctaTitle: "Ready to Discover Your Biological Age?",
+                ctaText: "Join thousands of users who are taking control of their health journey.",
+                ctaBtn: "Get Started Now →",
+                footerTitle: "🧬 AgeLens AI",
+                footerText: "Helping you understand and improve your health through science-based biological age tracking."
+            },
+            kn: {
+                logo: "🧬 ಏಜ್ಲೆನ್ಸ್ ಎಐ", home: "ಮುಖಪುಟ", features: "ವೈಶಿಷ್ಟ್ಯಗಳು", howItWorks: "ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ",
+                login: "ಲಾಗಿನ್", signup: "ಸೈನ್ ಅಪ್",
+                heroTitle: "ನಿಮ್ಮ ನಿಜವಾದ ಜೈವಿಕ ವಯಸ್ಸನ್ನು ಕಂಡುಹಿಡಿಯಿರಿ",
+                heroSubtitle: "ನಿಮ್ಮ ಕಾಲಾನುಕ್ರಮದ ವಯಸ್ಸು ಕೇವಲ ಒಂದು ಸಂಖ್ಯೆ. ನಿಮ್ಮ ಜೀವನಶೈಲಿ ನಿಮ್ಮ ನಿಜವಾದ ವಯಸ್ಸಿನ ಮೇಲೆ ಹೇಗೆ ಪರಿಣಾಮ ಬೀರುತ್ತದೆ ಎಂಬುದನ್ನು ಕಂಡುಕೊಳ್ಳಿ.",
+                getStarted: "ಉಚಿತವಾಗಿ ಪ್ರಾರಂಭಿಸಿ", learnMore: "ಇನ್ನಷ್ಟು ತಿಳಿಯಿರಿ",
+                whyChoose: "ನಮ್ಮನ್ನು ಏಕೆ ಆಯ್ಕೆ ಮಾಡಬೇಕು?",
+                f1Title: "ವಿಜ್ಞಾನ ಆಧಾರಿತ ವಿಶ್ಲೇಷಣೆ", f1Desc: "ನಮ್ಮ ಅಲ್ಗಾರಿದಮ್ ಇತ್ತೀಚಿನ ವೈದ್ಯಕೀಯ ಸಂಶೋಧನೆಯನ್ನು ಆಧರಿಸಿದೆ ಮತ್ತು ಆರೋಗ್ಯ ತಜ್ಞರಿಂದ ಮೌಲ್ಯೀಕರಿಸಲಾಗಿದೆ.",
+                f2Title: "ನಿಮ್ಮ ಪ್ರಗತಿಯನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಿ", f2Desc: "ಕಾಲಾನಂತರದಲ್ಲಿ ನಿಮ್ಮ ಜೈವಿಕ ವಯಸ್ಸನ್ನು ಮೇಲ್ವಿಚಾರಣೆ ಮಾಡಿ ಮತ್ತು ಜೀವನಶೈಲಿಯ ಬದಲಾವಣೆಗಳು ನಿಮ್ಮ ಆರೋಗ್ಯದ ಮೇಲೆ ಹೇಗೆ ಪರಿಣಾಮ ಬೀರುತ್ತವೆ ಎಂಬುದನ್ನು ನೋಡಿ.",
+                f3Title: "ವೈಯಕ್ತಿಕ ಒಳನೋಟಗಳು", f3Desc: "ನಿಮ್ಮ ಆರೋಗ್ಯವನ್ನು ಸುಧಾರಿಸಲು ಮತ್ತು ನಿಮ್ಮ ಜೈವಿಕ ವಯಸ್ಸನ್ನು ಕಡಿಮೆ ಮಾಡಲು ಸೂಕ್ತ ಶಿಫಾರಸುಗಳನ್ನು ಪಡೆಯಿರಿ.",
+                f4Title: "ಬಳಸಲು ಸುಲಭ", f4Desc: "ಸರಳ ಇಂಟರ್ಫೇಸ್, ತ್ವರಿತ ಫಲಿತಾಂಶಗಳು ಮತ್ತು ನಿಮ್ಮ ಬೆರಳ ತುದಿಯಲ್ಲಿ ವಿವರವಾದ ವಿಶ್ಲೇಷಣೆಗಳು.",
+                f5Title: "ಖಾಸಗಿ ಮತ್ತು ಸುರಕ್ಷಿತ", f5Desc: "ನಿಮ್ಮ ಆರೋಗ್ಯ ಡೇಟಾವನ್ನು ಎನ್ಕ್ರಿಪ್ಟ್ ಮಾಡಲಾಗಿದೆ ಮತ್ತು ಮೂರನೇ ವ್ಯಕ್ತಿಗಳೊಂದಿಗೆ ಎಂದಿಗೂ ಹಂಚಿಕೊಳ್ಳಲಾಗುವುದಿಲ್ಲ.",
+                f6Title: "ಕ್ರಿಯಾಶೀಲ ಗುರಿಗಳು", f6Desc: "ಆರೋಗ್ಯ ಗುರಿಗಳನ್ನು ಹೊಂದಿಸಿ ಮತ್ತು ಕಿರಿಯ ಜೈವಿಕ ವಯಸ್ಸಿನ ಕಡೆಗೆ ನಿಮ್ಮ ಪ್ರಯಾಣವನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಿ.",
+                howTitle: "ಇದು ಹೇಗೆ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತದೆ",
+                s1Title: "ಖಾತೆಯನ್ನು ರಚಿಸಿ", s1Desc: "ಉಚಿತವಾಗಿ ಸೈನ್ ಅಪ್ ಮಾಡಿ ಮತ್ತು ನಿಮ್ಮ ಆರೋಗ್ಯ ಪ್ರೊಫೈಲ್ ಅನ್ನು ರಚಿಸಿ.",
+                s2Title: "ಆರೋಗ್ಯ ಡೇಟಾವನ್ನು ನಮೂದಿಸಿ", s2Desc: "ವಯಸ್ಸು, ಬಿಎಂಐ, ಜೀವನಶೈಲಿ ಅಭ್ಯಾಸಗಳಂತಹ ಮೂಲ ಆರೋಗ್ಯ ಮಾಹಿತಿಯನ್ನು ಒದಗಿಸಿ.",
+                s3Title: "ಫಲಿತಾಂಶಗಳನ್ನು ಪಡೆಯಿರಿ", s3Desc: "ನಿಮ್ಮ ಜೈವಿಕ ವಯಸ್ಸನ್ನು ಮತ್ತು ವೈಯಕ್ತಿಕ ಶಿಫಾರಸುಗಳನ್ನು ಸ್ವೀಕರಿಸಿ.",
+                s4Title: "ಪ್ರಗತಿಯನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಿ", s4Desc: "ಕಾಲಾನಂತರದಲ್ಲಿ ಬದಲಾವಣೆಗಳನ್ನು ಮೇಲ್ವಿಚಾರಣೆ ಮಾಡಿ ಮತ್ತು ನಿಮ್ಮ ಆರೋಗ್ಯವನ್ನು ಸುಧಾರಿಸಿ.",
+                ctaTitle: "ನಿಮ್ಮ ಜೈವಿಕ ವಯಸ್ಸನ್ನು ಕಂಡುಹಿಡಿಯಲು ಸಿದ್ಧರಿದ್ದೀರಾ?",
+                ctaText: "ನಿಮ್ಮ ಆರೋಗ್ಯ ಪ್ರಯಾಣದ ನಿಯಂತ್ರಣವನ್ನು ತೆಗೆದುಕೊಳ್ಳುತ್ತಿರುವ ಸಾವಿರಾರು ಬಳಕೆದಾರರಿಗೆ ಸೇರಿ.",
+                ctaBtn: "ಈಗಲೇ ಪ್ರಾರಂಭಿಸಿ →",
+                footerTitle: "🧬 ಏಜ್ಲೆನ್ಸ್ ಎಐ",
+                footerText: "ವಿಜ್ಞಾನ ಆಧಾರಿತ ಜೈವಿಕ ವಯಸ್ಸಿನ ಟ್ರ್ಯಾಕಿಂಗ್ ಮೂಲಕ ನಿಮ್ಮ ಆರೋಗ್ಯವನ್ನು ಅರ್ಥಮಾಡಿಕೊಳ್ಳಲು ಮತ್ತು ಸುಧಾರಿಸಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ."
+            },
+            hi: {
+                logo: "🧬 एजलेंस एआई", home: "होम", features: "फीचर्स", howItWorks: "यह कैसे काम करता है",
+                login: "लॉगिन", signup: "साइन अप",
+                heroTitle: "अपनी वास्तविक जैविक आयु जानें",
+                heroSubtitle: "आपकी कालानुक्रमिक आयु सिर्फ एक संख्या है। जानें कि आपकी जीवनशैली आपकी वास्तविक आयु को कैसे प्रभावित करती है।",
+                getStarted: "मुफ्त शुरू करें", learnMore: "और जानें",
+                whyChoose: "हमें क्यों चुनें?",
+                f1Title: "विज्ञान-आधारित विश्लेषण", f1Desc: "हमारा एल्गोरिदम नवीनतम चिकित्सा अनुसंधान पर आधारित है और स्वास्थ्य विशेषज्ञों द्वारा मान्य है।",
+                f2Title: "अपनी प्रगति को ट्रैक करें", f2Desc: "समय के साथ अपनी जैविक आयु की निगरानी करें और देखें कि जीवनशैली में बदलाव आपके स्वास्थ्य को कैसे प्रभावित करते हैं।",
+                f3Title: "व्यक्तिगत अंतर्दृष्टि", f3Desc: "अपने स्वास्थ्य में सुधार और अपनी जैविक आयु को कम करने के लिए अनुरूप सिफारिशें प्राप्त करें।",
+                f4Title: "उपयोग में आसान", f4Desc: "सरल इंटरफ़ेस, त्वरित परिणाम, और आपकी उंगलियों पर विस्तृत विश्लेषण।",
+                f5Title: "निजी और सुरक्षित", f5Desc: "आपका स्वास्थ्य डेटा एन्क्रिप्टेड है और तीसरे पक्षों के साथ कभी साझा नहीं किया जाता है।",
+                f6Title: "क्रियाशील लक्ष्य", f6Desc: "स्वास्थ्य लक्ष्य निर्धारित करें और छोटी जैविक आयु की ओर अपनी यात्रा को ट्रैक करें।",
+                howTitle: "यह कैसे काम करता है",
+                s1Title: "खाता बनाएं", s1Desc: "मुफ्त में साइन अप करें और अपनी स्वास्थ्य प्रोफ़ाइल बनाएं।",
+                s2Title: "स्वास्थ्य डेटा दर्ज करें", s2Desc: "आयु, बीएमआई, जीवनशैली की आदतों जैसी बुनियादी स्वास्थ्य जानकारी प्रदान करें।",
+                s3Title: "परिणाम प्राप्त करें", s3Desc: "अपनी जैविक आयु और व्यक्तिगत सिफारिशें प्राप्त करें।",
+                s4Title: "प्रगति को ट्रैक करें", s4Desc: "समय के साथ परिवर्तनों की निगरानी करें और अपने स्वास्थ्य में सुधार करें।",
+                ctaTitle: "अपनी जैविक आयु जानने के लिए तैयार हैं?",
+                ctaText: "हजारों उपयोगकर्ताओं से जुड़ें जो अपने स्वास्थ्य यात्रा का नियंत्रण ले रहे हैं।",
+                ctaBtn: "अभी शुरू करें →",
+                footerTitle: "🧬 एजलेंस एआई",
+                footerText: "विज्ञान-आधारित जैविक आयु ट्रैकिंग के माध्यम से आपके स्वास्थ्य को समझने और सुधारने में आपकी सहायता करता है।"
+            }
+        };
+
+        var currentLang = localStorage.getItem('lang') || 'en';
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            var t = translations[lang];
+            
+            document.getElementById('logoText').innerHTML = t.logo;
+            document.getElementById('homeLink').innerHTML = t.home;
+            document.getElementById('featuresLink').innerHTML = t.features;
+            document.getElementById('howItWorksLink').innerHTML = t.howItWorks;
+            document.getElementById('loginBtn').innerHTML = t.login;
+            document.getElementById('signupBtn').innerHTML = t.signup;
+            document.getElementById('heroTitle').innerHTML = t.heroTitle;
+            document.getElementById('heroSubtitle').innerHTML = t.heroSubtitle;
+            document.getElementById('getStartedBtn').innerHTML = t.getStarted;
+            document.getElementById('learnMoreBtn').innerHTML = t.learnMore;
+            document.getElementById('whyChooseUs').innerHTML = t.whyChoose;
+            document.getElementById('feature1Title').innerHTML = t.f1Title;
+            document.getElementById('feature1Desc').innerHTML = t.f1Desc;
+            document.getElementById('feature2Title').innerHTML = t.f2Title;
+            document.getElementById('feature2Desc').innerHTML = t.f2Desc;
+            document.getElementById('feature3Title').innerHTML = t.f3Title;
+            document.getElementById('feature3Desc').innerHTML = t.f3Desc;
+            document.getElementById('feature4Title').innerHTML = t.f4Title;
+            document.getElementById('feature4Desc').innerHTML = t.f4Desc;
+            document.getElementById('feature5Title').innerHTML = t.f5Title;
+            document.getElementById('feature5Desc').innerHTML = t.f5Desc;
+            document.getElementById('feature6Title').innerHTML = t.f6Title;
+            document.getElementById('feature6Desc').innerHTML = t.f6Desc;
+            document.getElementById('howItWorksTitle').innerHTML = t.howTitle;
+            document.getElementById('step1Title').innerHTML = t.s1Title;
+            document.getElementById('step1Desc').innerHTML = t.s1Desc;
+            document.getElementById('step2Title').innerHTML = t.s2Title;
+            document.getElementById('step2Desc').innerHTML = t.s2Desc;
+            document.getElementById('step3Title').innerHTML = t.s3Title;
+            document.getElementById('step3Desc').innerHTML = t.s3Desc;
+            document.getElementById('step4Title').innerHTML = t.s4Title;
+            document.getElementById('step4Desc').innerHTML = t.s4Desc;
+            document.getElementById('ctaTitle').innerHTML = t.ctaTitle;
+            document.getElementById('ctaText').innerHTML = t.ctaText;
+            document.getElementById('ctaBtn').innerHTML = t.ctaBtn;
+            document.getElementById('footerTitle').innerHTML = t.footerTitle;
+            document.getElementById('footerText').innerHTML = t.footerText;
+            
+            document.querySelectorAll('.lang-btn').forEach(function(btn) {
+                btn.classList.remove('active');
+                if(btn.getAttribute('data-lang') === lang) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Initialize language
+        changeLanguage(currentLang);
+    </script>
+</body>
+</html>

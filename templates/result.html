@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Biological Age Results</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .nav-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-btn-secondary {
+            color: #666;
+        }
+
+        .nav-btn-secondary:hover {
+            color: #667eea;
+        }
+
+        .nav-btn-logout {
+            background: #dc3545;
+            color: white;
+        }
+
+        .nav-btn-logout:hover {
+            background: #c82333;
+        }
+
+        .language-switcher {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .lang-btn {
+            padding: 0.3rem 0.8rem;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .lang-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .lang-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Result Card */
+        .result-card {
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
+            background-size: 200%;
+            animation: gradientMove 3s ease infinite;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .result-card h1 {
+            font-size: 2.5em;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+        }
+
+        /* Age Comparison */
+        .age-comparison {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 40px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .age-box {
+            text-align: center;
+            padding: 30px;
+            border-radius: 20px;
+            min-width: 220px;
+            transition: all 0.3s;
+        }
+
+        .age-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .age-box:first-child {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .age-box.younger {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            color: #155724;
+        }
+
+        .age-box.older {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            color: #721c24;
+        }
+
+        .age-box.same {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: #004085;
+        }
+
+        .age-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .age-value {
+            font-size: 56px;
+            font-weight: 800;
+            line-height: 1;
+            margin: 10px 0;
+        }
+
+        .age-unit {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .age-arrow {
+            font-size: 40px;
+            color: #667eea;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(10px); }
+        }
+
+        /* Result Message */
+        .result-message {
+            text-align: center;
+            margin: 30px 0;
+            padding: 25px;
+            border-radius: 20px;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .success {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .warning {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%);
+            color: #856404;
+            border: 1px solid #ffeeba;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .info {
+            background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .result-message div {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .result-message p {
+            font-size: 1em;
+            margin-top: 10px;
+        }
+
+        /* Recommendations */
+        .recommendations {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 20px;
+            margin: 30px 0;
+        }
+
+        .recommendations h2 {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .recommendations ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .recommendations li {
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s;
+            animation: fadeIn 0.5s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .recommendations li:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Action Buttons */
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin: 30px 0 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 25px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #218838;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(40, 167, 69, 0.4);
+        }
+
+        .btn-voice {
+            background: #6f42c1;
+            color: white;
+        }
+
+        .btn-voice:hover {
+            background: #5a32a3;
+            transform: translateY(-3px);
+        }
+
+        /* Disclaimer */
+        .disclaimer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            background: rgba(248, 249, 250, 0.9);
+            border-radius: 15px;
+            color: #999;
+            font-size: 12px;
+        }
+
+        .disclaimer small {
+            color: #666;
+        }
+
+        /* Voice Status Indicator */
+        .voice-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 50px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+
+        .voice-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #28a745;
+            transition: all 0.3s;
+        }
+
+        .voice-dot.speaking {
+            background: #dc3545;
+            animation: voicePulse 1s infinite;
+        }
+
+        @keyframes voicePulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .result-card {
+                padding: 25px;
+            }
+            
+            .result-card h1 {
+                font-size: 1.8em;
+            }
+            
+            .age-comparison {
+                flex-direction: column;
+            }
+            
+            .age-arrow {
+                transform: rotate(90deg);
+            }
+            
+            .age-value {
+                font-size: 40px;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            .age-box {
+                min-width: 180px;
+                padding: 20px;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .actions, .voice-indicator {
+                display: none !important;
+            }
+            
+            .result-card {
+                box-shadow: none;
+                padding: 20px;
+            }
+        
+        }
+    /* Add this to your existing CSS */
+    @media print {
+        /* Hide navbar and buttons when printing */
+        .navbar,
+        .actions,
+        .voice-indicator,
+        .disclaimer,
+        .no-print {
+            display: none !important;
+        }
+        
+        /* Make sure the report card prints properly */
+        .result-card {
+            box-shadow: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        /* Ensure text is dark enough for printing */
+        .summary-section,
+        .clinical-summary,
+        .recommendations,
+        .age-box {
+            color: #000 !important;
+            background: white !important;
+        }
+        
+        /* Make all text black for printing */
+        * {
+            color: #000 !important;
+            background-color: transparent !important;
+        }
+        
+        /* Keep gradient backgrounds white */
+        .summary-section,
+        .age-box:first-child,
+        .age-box.younger,
+        .age-box.older,
+        .age-box.same {
+            background: white !important;
+            color: black !important;
+        }
+    }
+</style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">🧬 AgeLens AI</div>
+        <div class="nav-links">
+            <a href="/dashboard" class="nav-btn nav-btn-secondary">📊 Dashboard</a>
+            <a href="/predictor" class="nav-btn nav-btn-primary">🔮 New Prediction</a>
+            <div class="language-switcher">
+                <button class="lang-btn" onclick="changeLanguage('en')">🇬🇧 English</button>
+                <button class="lang-btn" onclick="changeLanguage('kn')">🇮🇳 ಕನ್ನಡ</button>
+                <button class="lang-btn" onclick="changeLanguage('hi')">🇮🇳 हिंदी</button>
+            </div>
+            <a href="/logout" class="nav-btn nav-btn-logout">🚪 Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="result-card">
+            <h1>🔬 Your Biological Age Results</h1>
+            
+            <div class="age-comparison">
+                <div class="age-box">
+                    <div class="age-label">Chronological Age</div>
+                    <div class="age-value">{{ chron_age }}</div>
+                    <div class="age-unit">years</div>
+                </div>
+                
+                <div class="age-arrow">→</div>
+                
+                <div class="age-box {% if status == 'younger' %}younger{% elif status == 'older' %}older{% else %}same{% endif %}">
+                    <div class="age-label">Biological Age</div>
+                    <div class="age-value">{{ bio_age }}</div>
+                    <div class="age-unit">years</div>
+                </div>
+            </div>
+            
+            <div class="result-message">
+                {% if status == 'younger' %}
+                    <div class="success">🎉 Congratulations! You're {{ age_diff }} years younger biologically!</div>
+                    <p>Your healthy lifestyle is paying off. Keep up the great work!</p>
+                {% elif status == 'older' %}
+                    <div class="warning">⚠️ Your biological age is {{ age_diff }} years older than your chronological age.</div>
+                    <p>Don't worry! Small lifestyle changes can make a big difference.</p>
+                {% else %}
+                    <div class="info">✅ Your biological age matches your chronological age perfectly!</div>
+                    <p>You're on the right track for healthy aging.</p>
+                {% endif %}
+            </div>
+            
+            <div class="recommendations">
+                <h2>📋 Personalized Recommendations</h2>
+                <ul>
+                    {% for rec in recommendations %}
+                    <li>{{ rec }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <div class="actions">
+                <a href="/predictor" class="btn btn-primary">🔄 New Prediction</a>
+                <button onclick="window.print()" class="btn btn-secondary">📄 Quick Print</button>
+                <a href="/medical-report" class="btn btn-medical" style="background: #1e3c72; color: white;">🏥 Medical Report</a>
+                <button id="repeatVoiceBtn" class="btn btn-voice">🔊 Repeat Results</button>
+            </div>
+            
+            <div class="disclaimer">
+                <small>⚠️ Disclaimer: This is for educational purposes only. Consult a healthcare professional for medical advice.</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Voice Indicator -->
+    <div class="voice-indicator" id="voiceIndicator">
+        <div class="voice-dot" id="voiceDot"></div>
+        <span id="voiceStatusText">Voice ready</span>
+    </div>
+
+    <!-- Language Switcher Script -->
+    <script>
+        function changeLanguage(lang) {
+            localStorage.setItem('lang', lang);
+            location.reload();
+        }
+        
+        // Set active button on page load
+        var savedLang = localStorage.getItem('lang') || 'en';
+        document.querySelectorAll('.lang-btn').forEach(function(btn) {
+            btn.classList.remove('active');
+            if((savedLang === 'en' && btn.innerText.includes('English')) ||
+               (savedLang === 'kn' && btn.innerText.includes('ಕನ್ನಡ')) ||
+               (savedLang === 'hi' && btn.innerText.includes('हिंदी'))) {
+                btn.classList.add('active');
+            }
+        });
+    </script>
+
+    <!-- Voice Assistant Script -->
+    <script>
+        class ResultVoiceAssistant {
+            constructor() {
+                this.synth = window.speechSynthesis;
+                this.currentUtterance = null;
+                this.isSpeaking = false;
+                this.initVoices();
+            }
+
+            initVoices() {
+                if (this.synth) {
+                    this.synth.getVoices();
+                }
+            }
+
+            speak(text, onEnd = null) {
+                if (this.synth) {
+                    if (this.currentUtterance) {
+                        this.synth.cancel();
+                    }
+                    
+                    this.currentUtterance = new SpeechSynthesisUtterance(text);
+                    this.currentUtterance.lang = 'en-US';
+                    this.currentUtterance.rate = 0.95;
+                    this.currentUtterance.pitch = 1.0;
+                    this.currentUtterance.volume = 1;
+                    
+                    let voices = this.synth.getVoices();
+                    if (voices.length === 0) {
+                        setTimeout(() => {
+                            voices = this.synth.getVoices();
+                            this.setPreferredVoice(voices);
+                        }, 100);
+                    } else {
+                        this.setPreferredVoice(voices);
+                    }
+                    
+                    this.currentUtterance.onstart = () => {
+                        this.isSpeaking = true;
+                        this.updateVoiceIndicator(true);
+                    };
+                    
+                    this.currentUtterance.onend = () => {
+                        this.isSpeaking = false;
+                        this.updateVoiceIndicator(false);
+                        if (onEnd) onEnd();
+                    };
+                    
+                    this.currentUtterance.onerror = () => {
+                        this.isSpeaking = false;
+                        this.updateVoiceIndicator(false);
+                    };
+                    
+                    this.synth.speak(this.currentUtterance);
+                }
+            }
+
+            setPreferredVoice(voices) {
+                const preferred = voices.find(v => v.lang === 'en-US' && v.name.includes('Google'));
+                if (preferred) {
+                    this.currentUtterance.voice = preferred;
+                }
+            }
+
+            updateVoiceIndicator(isSpeaking) {
+                const dot = document.getElementById('voiceDot');
+                const statusText = document.getElementById('voiceStatusText');
+                
+                if (isSpeaking) {
+                    dot.classList.add('speaking');
+                    if (statusText) statusText.textContent = '🔊 Speaking...';
+                } else {
+                    dot.classList.remove('speaking');
+                    if (statusText) statusText.textContent = '🎤 Voice ready';
+                }
+            }
+
+            speakPredictionResults() {
+                const chronAgeElem = document.querySelector('.age-box:first-child .age-value');
+                const bioAgeElem = document.querySelector('.age-box:last-child .age-value');
+                const recommendationsList = document.querySelectorAll('.recommendations li');
+                
+                let chron_age = chronAgeElem ? parseFloat(chronAgeElem.textContent) : 0;
+                let bio_age = bioAgeElem ? parseFloat(bioAgeElem.textContent) : 0;
+                let age_diff = Math.abs(bio_age - chron_age).toFixed(1);
+                let status = '';
+                let recommendations = [];
+                
+                if (bio_age < chron_age) status = 'younger';
+                else if (bio_age > chron_age) status = 'older';
+                else status = 'same';
+                
+                recommendationsList.forEach(rec => {
+                    recommendations.push(rec.textContent);
+                });
+                
+                let message = `Your biological age is ${bio_age} years. `;
+                message += `Your chronological age is ${chron_age} years. `;
+                
+                if (status === 'younger') {
+                    message += `Congratulations! You are ${age_diff} years younger biologically. `;
+                    message += `Your healthy lifestyle is paying off. Keep up the great work! `;
+                } else if (status === 'older') {
+                    message += `Your biological age is ${age_diff} years older than your chronological age. `;
+                    message += `Don't worry! Small lifestyle changes can make a big difference. `;
+                } else {
+                    message += `Your biological age matches your chronological age perfectly! `;
+                    message += `You're on the right track for healthy aging. `;
+                }
+                
+                if (recommendations.length > 0) {
+                    message += `Here are my recommendations for you. `;
+                    const topRecs = recommendations.slice(0, 3);
+                    topRecs.forEach(rec => {
+                        let cleanRec = rec.replace(/[^a-zA-Z0-9\s\.]/g, '');
+                        message += cleanRec + '. ';
+                    });
+                }
+                
+                this.speak(message);
+            }
+
+            stopSpeaking() {
+                if (this.synth) {
+                    this.synth.cancel();
+                    this.isSpeaking = false;
+                    this.updateVoiceIndicator(false);
+                }
+            }
+        }
+
+        let resultVoiceAssistant = null;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            resultVoiceAssistant = new ResultVoiceAssistant();
+            
+            setTimeout(function() {
+                if (resultVoiceAssistant) {
+                    resultVoiceAssistant.speakPredictionResults();
+                }
+            }, 1000);
+            
+            const repeatBtn = document.getElementById('repeatVoiceBtn');
+            if (repeatBtn) {
+                repeatBtn.addEventListener('click', function() {
+                    if (resultVoiceAssistant) {
+                        resultVoiceAssistant.stopSpeaking();
+                        setTimeout(() => {
+                            resultVoiceAssistant.speakPredictionResults();
+                        }, 100);
+                    }
+                });
+            }
+            
+            window.addEventListener('beforeunload', function() {
+                if (resultVoiceAssistant) {
+                    resultVoiceAssistant.stopSpeaking();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

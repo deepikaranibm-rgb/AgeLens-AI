@@ -1,0 +1,507 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.header {
+    text-align: center;
+    color: white;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+.health-form, .result-card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.form-section {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.form-section h2 {
+    color: #667eea;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.form-group small {
+    display: block;
+    color: #666;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.predict-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.predict-btn:hover {
+    transform: translateY(-2px);
+}
+
+.age-comparison {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 30px 0;
+}
+
+.age-box {
+    text-align: center;
+    padding: 20px;
+    border-radius: 15px;
+    background: #f8f9fa;
+    min-width: 150px;
+}
+
+.age-box.younger {
+    background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+}
+
+.age-box.older {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.age-box.same {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.age-label {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.age-value {
+    font-size: 48px;
+    font-weight: bold;
+    color: #333;
+}
+
+.age-unit {
+    font-size: 14px;
+    color: #666;
+}
+
+.age-arrow {
+    font-size: 30px;
+    color: #667eea;
+}
+
+.result-message {
+    text-align: center;
+    margin: 30px 0;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.success {
+    color: #155724;
+    background: #d4edda;
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.warning {
+    color: #856404;
+    background: #fff3cd;
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.info {
+    color: #004085;
+    background: #cce5ff;
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.recommendations {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+
+.recommendations h2 {
+    color: #667eea;
+    margin-bottom: 15px;
+}
+
+.recommendations ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.recommendations li {
+    padding: 10px;
+    margin-bottom: 8px;
+    background: white;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn {
+    flex: 1;
+    padding: 12px;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.btn:first-child {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.disclaimer {
+    margin-top: 20px;
+    text-align: center;
+    color: #999;
+}
+
+@media (max-width: 768px) {
+    .age-comparison {
+        flex-direction: column;
+    }
+    
+    .age-arrow {
+        transform: rotate(90deg);
+        margin: 10px 0;
+    }
+    
+    .actions {
+        flex-direction: column;
+    }
+}
+/* Add these to existing CSS */
+
+.user-info {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.dashboard-link, .logout-link {
+    color: white;
+    text-decoration: none;
+    margin: 0 5px;
+    padding: 5px 10px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 5px;
+}
+
+.preview-box {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    margin: 20px 0;
+    font-weight: bold;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.clear-btn {
+    flex: 1;
+    padding: 15px;
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.clear-btn:hover {
+    transform: translateY(-2px);
+    background: #5a6268;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    animation: fadeIn 0.3s;
+}
+
+.modal-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    animation: slideIn 0.3s;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: black;
+}
+
+.results-container {
+    padding: 20px;
+}
+
+.age-comparison {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.age-card {
+    text-align: center;
+    padding: 20px;
+    border-radius: 15px;
+    background: #f8f9fa;
+    min-width: 150px;
+}
+
+.age-card.positive {
+    background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+}
+
+.age-card.negative {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.age-card.neutral {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.age-number {
+    font-size: 48px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.age-arrow {
+    font-size: 30px;
+    color: #667eea;
+}
+
+.result-summary {
+    text-align: center;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+
+.result-summary.positive {
+    background: #d4edda;
+    color: #155724;
+}
+
+.result-summary.negative {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.recommendations {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+}
+
+.recommendations ul {
+    padding-left: 20px;
+}
+
+.recommendations li {
+    margin: 10px 0;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-save, .btn-close {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-save {
+    background: #28a745;
+    color: white;
+}
+
+.btn-close {
+    background: #6c757d;
+    color: white;
+}
+
+/* Notification */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 10px;
+    z-index: 2000;
+    animation: slideInRight 0.3s;
+}
+
+.notification.success {
+    background: #28a745;
+    color: white;
+}
+
+.notification.error {
+    background: #dc3545;
+    color: white;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+.btn-medical {
+    background: #1e3c72;
+    color: white;
+}
+
+.btn-medical:hover {
+    background: #2a5298;
+    transform: translateY(-3px);
+}
+.language-switcher {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.lang-btn {
+    padding: 0.3rem 0.8rem;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.3s;
+}
+
+.lang-btn:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+.lang-btn.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-color: transparent;
+}

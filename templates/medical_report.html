@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Report - Biological Age Assessment</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Poppins', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 40px;
+        }
+
+        /* Report Container */
+        .report-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        /* Header Section */
+        .report-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        .report-header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .report-header .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .report-id {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 12px;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        /* Patient Info Section */
+        .patient-info {
+            padding: 30px 40px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e0e0e0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .info-icon {
+            font-size: 30px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-top: 5px;
+        }
+
+        /* Age Comparison Section */
+        .age-comparison {
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            text-align: center;
+        }
+
+        .comparison-title {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .age-cards {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .age-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            min-width: 200px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .age-card.chron {
+            border-top: 5px solid #667eea;
+        }
+
+        .age-card.bio {
+            border-top: 5px solid #28a745;
+        }
+
+        .age-card.bio.older {
+            border-top-color: #dc3545;
+        }
+
+        .age-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .age-number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .age-unit {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .arrow {
+            font-size: 40px;
+            color: #667eea;
+        }
+
+        .age-difference {
+            margin-top: 30px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+        }
+
+        .badge-younger {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-older {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .badge-same {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        /* Health Metrics Grid */
+        .health-metrics {
+            padding: 40px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2a5298;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            display: inline-block;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .metric-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            transition: transform 0.3s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .metric-name {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .metric-unit {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .metric-status {
+            margin-top: 10px;
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .status-good {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-bad {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Recommendations Section */
+        .recommendations-section {
+            padding: 40px;
+            background: #f8f9fa;
+        }
+
+        .rec-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .rec-item {
+            padding: 15px;
+            margin-bottom: 12px;
+            background: white;
+            border-radius: 12px;
+            border-left: 4px solid #28a745;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+        }
+
+        .rec-icon {
+            font-size: 24px;
+        }
+
+        .rec-text {
+            flex: 1;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        /* Summary Section */
+        .summary-section {
+            padding: 40px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+
+        .summary-text {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .quote {
+            font-style: italic;
+            font-size: 18px;
+            text-align: center;
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.3);
+            margin-top: 20px;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .action-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .action-btn.print {
+            background: #28a745;
+            color: white;
+        }
+
+        .action-btn.download {
+            background: #667eea;
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+            }
+            
+            .report-container {
+                box-shadow: none;
+                margin: 0;
+            }
+            
+            .no-print {
+                display: none !important;
+            }
+            
+            .metric-card:hover {
+                transform: none;
+            }
+            
+            .rec-item:hover {
+                transform: none;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 20px;
+            }
+            
+            .report-header, .patient-info, .age-comparison, .health-metrics, .recommendations-section, .summary-section {
+                padding: 20px;
+            }
+            
+            .age-cards {
+                flex-direction: column;
+            }
+            
+            .arrow {
+                transform: rotate(90deg);
+            }
+            
+            .action-buttons {
+                bottom: 20px;
+                right: 20px;
+                flex-direction: column;
+            }
+        }
+        
+    /* Your existing styles here... */
+    
+    /* Print styles - hides navbar and buttons */
+    @media print {
+        .navbar,
+        .action-buttons,
+        .no-print,
+        .language-switcher,
+        .nav-links,
+        .btn,
+        button {
+            display: none !important;
+        }
+        
+        .report-container {
+            margin: 0;
+            padding: 0;
+            box-shadow: none;
+        }
+        
+        .report-header {
+            background: #1e3c72 !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        
+        .summary-section {
+            background: #1e3c72 !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        
+        .age-card {
+            border: 1px solid #ddd;
+        }
+        
+        /* Make text dark for printing */
+        body, .report-container, .summary-text, .quote {
+            color: #000 !important;
+        }
+    }
+    </style>
+</head>
+<body>
+    <div class="report-container">
+        <!-- Header -->
+        <div class="report-header">
+            <div class="report-id">Report ID: BIO-{{ report_id }}</div>
+            <h1>🏥 BIOLOGICAL AGE ASSESSMENT REPORT</h1>
+            <div class="subtitle">Comprehensive Health & Longevity Analysis</div>
+            <div class="subtitle">Generated on {{ current_date }}</div>
+        </div>
+
+        <!-- Patient Information -->
+        <div class="patient-info">
+            <div class="info-item">
+                <div class="info-icon">👤</div>
+                <div>
+                    <div class="info-label">Patient Name</div>
+                    <div class="info-value">{{ username }}</div>
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-icon">📅</div>
+                <div>
+                    <div class="info-label">Report Date</div>
+                    <div class="info-value">{{ current_date }}</div>
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-icon">🕐</div>
+                <div>
+                    <div class="info-label">Report Time</div>
+                    <div class="info-value">{{ current_time }}</div>
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-icon">🔬</div>
+                <div>
+                    <div class="info-label">Assessment Type</div>
+                    <div class="info-value">Biological Age Analysis</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Age Comparison -->
+        <div class="age-comparison">
+            <div class="comparison-title">📊 AGE COMPARISON ANALYSIS</div>
+            <div class="age-cards">
+                <div class="age-card chron">
+                    <div class="age-label">Chronological Age</div>
+                    <div class="age-number">{{ chron_age }}<span class="age-unit"> yrs</span></div>
+                    <div style="font-size: 12px; color: #666; margin-top: 10px;">Actual calendar age</div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="age-card bio {% if status == 'older' %}older{% endif %}">
+                    <div class="age-label">Biological Age</div>
+                    <div class="age-number">{{ bio_age }}<span class="age-unit"> yrs</span></div>
+                    <div style="font-size: 12px; color: #666; margin-top: 10px;">Cellular & metabolic age</div>
+                </div>
+            </div>
+            <div class="age-difference">
+                {% if status == 'younger' %}
+                    <span class="badge badge-younger">🎉 BIOLOGICALLY YOUNGER by {{ age_diff }} years</span>
+                {% elif status == 'older' %}
+                    <span class="badge badge-older">⚠️ BIOLOGICALLY OLDER by {{ age_diff }} years</span>
+                {% else %}
+                    <span class="badge badge-same">✅ BIOLOGICAL AGE MATCHES CHRONOLOGICAL AGE</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Health Metrics -->
+        <div class="health-metrics">
+            <div class="section-title">📋 HEALTH METRICS ASSESSMENT</div>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-name">📊 Body Mass Index (BMI)</div>
+                    <div class="metric-value">{{ bmi }} <span class="metric-unit">kg/m²</span></div>
+                    <div class="metric-status 
+                        {% if bmi >= 18.5 and bmi <= 24.9 %}status-good
+                        {% elif bmi < 18.5 or bmi > 29.9 %}status-bad
+                        {% else %}status-warning{% endif %}">
+                        {% if bmi < 18.5 %}Underweight
+                        {% elif bmi < 25 %}Normal weight ✓
+                        {% elif bmi < 30 %}Overweight
+                        {% else %}Obese{% endif %}
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-name">😴 Sleep Duration</div>
+                    <div class="metric-value">{{ sleep_hours }} <span class="metric-unit">hours/day</span></div>
+                    <div class="metric-status 
+                        {% if sleep_hours >= 7 and sleep_hours <= 9 %}status-good
+                        {% else %}status-warning{% endif %}">
+                        {% if sleep_hours >= 7 and sleep_hours <= 9 %}Optimal ✓
+                        {% elif sleep_hours < 7 %}Below recommended
+                        {% else %}Above recommended{% endif %}
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-name">🏋️ Exercise Frequency</div>
+                    <div class="metric-value">{{ exercise_frequency }} <span class="metric-unit">days/week</span></div>
+                    <div class="metric-status 
+                        {% if exercise_frequency >= 3 and exercise_frequency <= 5 %}status-good
+                        {% elif exercise_frequency < 3 %}status-warning
+                        {% else %}status-bad{% endif %}">
+                        {% if exercise_frequency >= 3 and exercise_frequency <= 5 %}Active lifestyle ✓
+                        {% elif exercise_frequency < 3 %}Needs improvement
+                        {% else %}Excessive{% endif %}
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-name">❤️ Blood Pressure</div>
+                    <div class="metric-value">{{ systolic_bp }}/{{ diastolic_bp }} <span class="metric-unit">mmHg</span></div>
+                    <div class="metric-status 
+                        {% if systolic_bp <= 120 and diastolic_bp <= 80 %}status-good
+                        {% elif systolic_bp > 140 or diastolic_bp > 90 %}status-bad
+                        {% else %}status-warning{% endif %}">
+                        {% if systolic_bp <= 120 and diastolic_bp <= 80 %}Normal ✓
+                        {% elif systolic_bp > 140 or diastolic_bp > 90 %}Hypertensive
+                        {% else %}Elevated{% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lifestyle Factors -->
+        <div class="health-metrics">
+            <div class="section-title">🌿 LIFESTYLE FACTORS</div>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-name">🚬 Smoking Status</div>
+                    <div class="metric-value">{% if smoking == 0 %}Non-Smoker ✓{% else %}Smoker ⚠️{% endif %}</div>
+                    {% if smoking == 1 %}
+                    <div class="metric-status status-bad">Increases biological age by ~3.5 years</div>
+                    {% endif %}
+                </div>
+                <div class="metric-card">
+                    <div class="metric-name">🍷 Alcohol Consumption</div>
+                    <div class="metric-value">{{ alcohol_consumption }} <span class="metric-unit">drinks/week</span></div>
+                    <div class="metric-status 
+                        {% if alcohol_consumption <= 7 %}status-good
+                        {% elif alcohol_consumption <= 14 %}status-warning
+                        {% else %}status-bad{% endif %}">
+                        {% if alcohol_consumption <= 7 %}Moderate ✓
+                        {% elif alcohol_consumption <= 14 %}At risk
+                        {% else %}High risk{% endif %}
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-name">🧘 Stress Level</div>
+                    <div class="metric-value">{{ stress_level }} <span class="metric-unit">/10</span></div>
+                    <div class="metric-status 
+                        {% if stress_level <= 3 %}status-good
+                        {% elif stress_level <= 7 %}status-warning
+                        {% else %}status-bad{% endif %}">
+                        {% if stress_level <= 3 %}Low stress ✓
+                        {% elif stress_level <= 7 %}Moderate stress
+                        {% else %}High stress ⚠️{% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendations -->
+        <div class="recommendations-section">
+            <div class="section-title">💡 PERSONALIZED RECOMMENDATIONS</div>
+            <ul class="rec-list">
+                {% for rec in recommendations %}
+                <li class="rec-item">
+                    <div class="rec-icon">
+                        {% if '🎉' in rec or '✅' in rec %}✨
+                        {% elif '⚠️' in rec %}⚠️
+                        {% elif '🏃' in rec %}🏃
+                        {% elif '😴' in rec %}😴
+                        {% elif '🏋️' in rec %}🏋️
+                        {% elif '🚭' in rec %}🚭
+                        {% elif '🍷' in rec %}🍷
+                        {% elif '🧘' in rec %}🧘
+                        {% elif '❤️' in rec %}❤️
+                        {% else %}📌{% endif %}
+                    </div>
+                    <div class="rec-text">{{ rec }}</div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Clinical Summary -->
+        <div class="summary-section">
+            <div class="section-title" style="color: white; border-bottom-color: white;">📝 CLINICAL SUMMARY</div>
+            <div class="summary-text">
+                {% if status == 'younger' %}
+                <strong>Excellent Health Status:</strong> Your biological age being {{ age_diff }} years younger than your chronological age indicates superior health maintenance and successful aging. Your lifestyle choices are positively impacting your cellular health.
+                {% elif status == 'older' %}
+                <strong>Health Optimization Needed:</strong> Your biological age is {{ age_diff }} years older than your chronological age. This suggests that certain lifestyle factors may be accelerating your aging process. The good news is that these factors are modifiable.
+                {% else %}
+                <strong>Healthy Aging Status:</strong> Your biological age matching your chronological age indicates you're aging at a normal rate. With some lifestyle optimizations, you can potentially slow down the aging process further.
+                {% endif %}
+            </div>
+            <div class="summary-text">
+                <strong>Key Focus Areas:</strong>
+                {% if bmi < 18.5 or bmi > 25 %} • BMI optimization 
+                {% endif %}
+                {% if sleep_hours < 7 %} • Sleep improvement 
+                {% endif %}
+                {% if exercise_frequency < 3 %} • Exercise increase 
+                {% endif %}
+                {% if smoking == 1 %} • Smoking cessation 
+                {% endif %}
+                {% if stress_level > 7 %} • Stress management {% endif %}
+                Follow the personalized recommendations above for optimal results.
+            </div>
+            <div class="quote">
+                "The greatest wealth is health. Small daily improvements lead to remarkable long-term results."
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons no-print">
+        <button class="action-btn print" onclick="printReport()">
+            🖨️ Print Report
+        </button>
+        <button class="action-btn download" onclick="downloadAsPDF()">
+            📥 Download as PDF
+        </button>
+        <button class="action-btn" onclick="goBack()" style="background: #6c757d; color: white;">
+            ← Back to Results
+        </button>
+    </div>
+
+    <script>
+        function printReport() {
+            window.print();
+        }
+
+        function downloadAsPDF() {
+            alert("To save as PDF:\n\n1. Click 'Print Report'\n2. In the print dialog, select 'Save as PDF' as the destination\n3. Click 'Save' to download your medical report");
+            window.print();
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        // Add animation on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.metric-card, .rec-item');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'all 0.5s ease';
+                    
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 50);
+                }, index * 50);
+            });
+        });
+    </script>
+    
+</body>
+</html>

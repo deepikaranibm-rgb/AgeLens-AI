@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - AgeLens AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .language-switcher {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 0.5rem;
+            z-index: 10;
+        }
+
+        .lang-btn {
+            padding: 0.3rem 0.8rem;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .lang-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .lang-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group input.error {
+            border-color: #dc3545;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .password-field {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #999;
+        }
+
+        .toggle-password:hover {
+            color: #667eea;
+        }
+
+        .checkbox-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .checkbox-label input {
+            width: auto;
+            cursor: pointer;
+        }
+
+        .forgot-link {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            color: #666;
+        }
+
+        .register-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .login-btn.loading {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .login-btn.loading .btn-text {
+            display: none;
+        }
+
+        .login-btn.loading .spinner {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="language-switcher">
+            <button class="lang-btn" data-lang="en" onclick="changeLanguage('en')">🇬🇧 English</button>
+            <button class="lang-btn" data-lang="kn" onclick="changeLanguage('kn')">🇮🇳 ಕನ್ನಡ</button>
+            <button class="lang-btn" data-lang="hi" onclick="changeLanguage('hi')">🇮🇳 हिंदी</button>
+        </div>
+        <div class="login-card">
+            <div class="logo">
+                <h1 id="title">🧬 AgeLens AI</h1>
+                <p id="subtitle">Welcome back! Login to continue</p>
+            </div>
+
+            <div id="alert" class="alert"></div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label id="usernameLabel" for="username">Username or Email</label>
+                    <input type="text" id="username" name="username" required placeholder="Enter username or email">
+                    <div class="error-message" id="usernameError">Please enter username/email</div>
+                </div>
+
+                <div class="form-group">
+                    <label id="passwordLabel" for="password">Password</label>
+                    <div class="password-field">
+                        <input type="password" id="password" name="password" required placeholder="Enter password">
+                        <span class="toggle-password" onclick="togglePassword('password')">👁️</span>
+                    </div>
+                    <div class="error-message" id="passwordError">Please enter password</div>
+                </div>
+
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="rememberMe"> <span id="rememberText">Remember me</span>
+                    </label>
+                    <a href="#" class="forgot-link" id="forgotText" onclick="showForgotPassword(event)">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="login-btn" id="loginBtn">
+                    <span class="btn-text" id="loginBtnText">Login</span>
+                    <div class="spinner"></div>
+                </button>
+            </form>
+
+            <div class="register-link">
+                <span id="noAccountText">Don't have an account?</span> <a href="/register" id="createAccountText">Create an account</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var translations = {
+            en: {
+                title: "🧬 AgeLens AI", subtitle: "Welcome back! Login to continue",
+                usernameLabel: "Username or Email", passwordLabel: "Password",
+                rememberText: "Remember me", forgotText: "Forgot password?",
+                loginBtn: "Login", noAccountText: "Don't have an account?", createAccountText: "Create an account",
+                usernameError: "Please enter username/email", passwordError: "Please enter password",
+                invalidCred: "Invalid username/email or password!", networkError: "Network error. Please try again."
+            },
+            kn: {
+                title: "🧬 ಏಜ್ಲೆನ್ಸ್ ಎಐ", subtitle: "ಮರಳಿ ಸ್ವಾಗತ! ಮುಂದುವರೆಯಲು ಲಾಗಿನ್ ಮಾಡಿ",
+                usernameLabel: "ಬಳಕೆದಾರಹೆಸರು ಅಥವಾ ಇಮೇಲ್", passwordLabel: "ಪಾಸ್ವರ್ಡ್",
+                rememberText: "ನನ್ನನ್ನು ನೆನಪಿನಲ್ಲಿಡು", forgotText: "ಪಾಸ್ವರ್ಡ್ ಮರೆತುಹೋಯಿತೇ?",
+                loginBtn: "ಲಾಗಿನ್", noAccountText: "ಖಾತೆ ಇಲ್ಲವೇ?", createAccountText: "ಖಾತೆಯನ್ನು ರಚಿಸಿ",
+                usernameError: "ದಯವಿಟ್ಟು ಬಳಕೆದಾರಹೆಸರು/ಇಮೇಲ್ ನಮೂದಿಸಿ", passwordError: "ದಯವಿಟ್ಟು ಪಾಸ್ವರ್ಡ್ ನಮೂದಿಸಿ",
+                invalidCred: "ಅಮಾನ್ಯ ಬಳಕೆದಾರಹೆಸರು/ಇಮೇಲ್ ಅಥವಾ ಪಾಸ್ವರ್ಡ್!", networkError: "ನೆಟ್ವರ್ಕ್ ದೋಷ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ."
+            },
+            hi: {
+                title: "🧬 एजलेंस एआई", subtitle: "वापसी पर स्वागत है! जारी रखने के लिए लॉगिन करें",
+                usernameLabel: "उपयोगकर्ता नाम या ईमेल", passwordLabel: "पासवर्ड",
+                rememberText: "मुझे याद रखें", forgotText: "पासवर्ड भूल गए?",
+                loginBtn: "लॉगिन", noAccountText: "खाता नहीं है?", createAccountText: "खाता बनाएं",
+                usernameError: "कृपया उपयोगकर्ता नाम/ईमेल दर्ज करें", passwordError: "कृपया पासवर्ड दर्ज करें",
+                invalidCred: "अमान्य उपयोगकर्ता नाम/ईमेल या पासवर्ड!", networkError: "नेटवर्क त्रुटि। कृपया पुनः प्रयास करें।"
+            }
+        };
+
+        var currentLang = localStorage.getItem('lang') || 'en';
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            var t = translations[lang];
+            
+            document.getElementById('title').innerHTML = t.title;
+            document.getElementById('subtitle').innerHTML = t.subtitle;
+            document.getElementById('usernameLabel').innerHTML = t.usernameLabel;
+            document.getElementById('passwordLabel').innerHTML = t.passwordLabel;
+            document.getElementById('rememberText').innerHTML = t.rememberText;
+            document.getElementById('forgotText').innerHTML = t.forgotText;
+            document.getElementById('loginBtnText').innerHTML = t.loginBtn;
+            document.getElementById('noAccountText').innerHTML = t.noAccountText;
+            document.getElementById('createAccountText').innerHTML = t.createAccountText;
+            document.getElementById('usernameError').innerHTML = t.usernameError;
+            document.getElementById('passwordError').innerHTML = t.passwordError;
+            
+            document.querySelectorAll('.lang-btn').forEach(function(btn) {
+                btn.classList.remove('active');
+                if(btn.getAttribute('data-lang') === lang) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            const type = field.type === 'password' ? 'text' : 'password';
+            field.type = type;
+        }
+
+        function showAlert(message, type) {
+            const alert = document.getElementById('alert');
+            alert.textContent = message;
+            alert.className = `alert alert-${type} show`;
+            setTimeout(() => {
+                alert.classList.remove('show');
+            }, 5000);
+        }
+
+        function validateForm() {
+            let isValid = true;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            document.getElementById('usernameError').classList.remove('show');
+            document.getElementById('passwordError').classList.remove('show');
+            document.getElementById('username').classList.remove('error');
+            document.getElementById('password').classList.remove('error');
+            
+            if (!username.trim()) {
+                document.getElementById('usernameError').classList.add('show');
+                document.getElementById('username').classList.add('error');
+                isValid = false;
+            }
+            
+            if (!password) {
+                document.getElementById('passwordError').classList.add('show');
+                document.getElementById('password').classList.add('error');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            if (!validateForm()) {
+                return;
+            }
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+            
+            const btn = document.getElementById('loginBtn');
+            btn.classList.add('loading');
+            btn.disabled = true;
+            
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        'username': username,
+                        'password': password,
+                        'remember_me': rememberMe
+                    })
+                });
+                
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else {
+                    showAlert(translations[currentLang].invalidCred, 'error');
+                }
+            } catch (error) {
+                showAlert(translations[currentLang].networkError, 'error');
+            } finally {
+                btn.classList.remove('loading');
+                btn.disabled = false;
+            }
+        }
+
+        function showForgotPassword(event) {
+            event.preventDefault();
+            const email = prompt('Enter your email address to reset password:');
+            if (email) {
+                showAlert('Password reset link sent to ' + email, 'info');
+            }
+        }
+
+        document.getElementById('loginForm').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleLogin(e);
+            }
+        });
+
+        changeLanguage(currentLang);
+    </script>
+</body>
+</html>

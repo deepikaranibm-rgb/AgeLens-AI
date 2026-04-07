@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - AgeLens AI</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .nav-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-btn-secondary {
+            color: #666;
+        }
+
+        .nav-btn-secondary:hover {
+            color: #667eea;
+        }
+
+        .nav-btn-logout {
+            background: #dc3545;
+            color: white;
+        }
+
+        .nav-btn-logout:hover {
+            background: #c82333;
+        }
+
+        .language-switcher {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .lang-btn {
+            padding: 0.3rem 0.8rem;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .lang-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .lang-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .welcome-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .welcome-title {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-title span {
+            color: #667eea;
+        }
+
+        .welcome-text {
+            color: #666;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .stat-unit {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .stat-trend {
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .trend-good {
+            color: #28a745;
+        }
+
+        .trend-bad {
+            color: #dc3545;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        canvas {
+            max-height: 300px;
+        }
+
+        .history-section {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .history-table th {
+            background: #f8f9fa;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #555;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .history-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+            color: #666;
+        }
+
+        .history-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px 8px;
+            border-radius: 50%;
+            transition: all 0.3s;
+            color: #dc3545;
+        }
+
+        .delete-btn:hover {
+            background: #dc3545;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo" id="logoText">🧬 AgeLens AI</div>
+        <div class="nav-links">
+            <a href="/predictor" class="nav-btn nav-btn-primary" id="newPredictionText">🔮 New Prediction</a>
+            <div class="language-switcher">
+                <button class="lang-btn" data-lang="en" onclick="changeLanguage('en')">🇬🇧 English</button>
+                <button class="lang-btn" data-lang="kn" onclick="changeLanguage('kn')">🇮🇳 ಕನ್ನಡ</button>
+                <button class="lang-btn" data-lang="hi" onclick="changeLanguage('hi')">🇮🇳 हिंदी</button>
+            </div>
+            <a href="/logout" class="nav-btn nav-btn-logout" id="logoutText">🚪 Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="welcome-card">
+            <div class="welcome-title">
+                <span id="welcomeBackText">Welcome back</span>, <span>{{ username }}</span>!
+            </div>
+            <div class="welcome-text" id="welcomeMsgText">
+                Track your biological age journey and see how your lifestyle choices impact your health.
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-label" id="totalPredLabel">Total Predictions</div>
+                <div class="stat-value" id="totalPredictions">0</div>
+                <div class="stat-trend" id="lifetimePredText">Lifetime predictions</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📈</div>
+                <div class="stat-label" id="avgDiffLabel">Average Age Difference</div>
+                <div class="stat-value">
+                    <span id="avgDiffValue">0</span>
+                    <span class="stat-unit" id="yearsUnit">years</span>
+                </div>
+                <div class="stat-trend" id="avgDiffTrend"></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🏆</div>
+                <div class="stat-label" id="bestResultLabel">Best Result</div>
+                <div class="stat-value" id="bestResult">0</div>
+                <div class="stat-trend" id="yearsYoungerText">Years younger</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⚠️</div>
+                <div class="stat-label" id="needsImproveLabel">Needs Improvement</div>
+                <div class="stat-value" id="worstResult">0</div>
+                <div class="stat-trend" id="yearsOlderText">Years older</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-title" id="bioTrendText">📈 Biological Age Trend</div>
+                <canvas id="trendChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <div class="chart-title" id="ageDistText">🎯 Age Difference Distribution</div>
+                <canvas id="distributionChart"></canvas>
+            </div>
+        </div>
+
+        <div class="history-section">
+            <div class="section-header">
+                <div class="section-title" id="historyTitle">📜 Prediction History</div>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all" onclick="filterHistory('all')" id="allBtn">All</button>
+                    <button class="filter-btn" data-filter="younger" onclick="filterHistory('younger')" id="youngerBtn">Younger</button>
+                    <button class="filter-btn" data-filter="older" onclick="filterHistory('older')" id="olderBtn">Older</button>
+                    <button class="filter-btn" data-filter="same" onclick="filterHistory('same')" id="sameBtn">Same</button>
+                </div>
+            </div>
+            <div class="table-container">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th id="dateHeader">Date</th>
+                            <th id="chronHeader">Chron. Age</th>
+                            <th id="bioHeader">Bio. Age</th>
+                            <th id="diffHeader">Difference</th>
+                            <th id="bmiHeader">BMI</th>
+                            <th id="sleepHeader">Sleep</th>
+                            <th id="exerciseHeader">Exercise</th>
+                            <th id="statusHeader">Status</th>
+                            <th id="actionHeader">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Translations
+        var translations = {
+            en: {
+                logo: "🧬 AgeLens AI", newPrediction: "🔮 New Prediction", logout: "🚪 Logout",
+                welcomeBack: "Welcome back", welcomeMsg: "Track your biological age journey and see how your lifestyle choices impact your health.",
+                totalPred: "Total Predictions", lifetimePred: "Lifetime predictions", avgDiff: "Average Age Difference",
+                years: "years", bestResult: "Best Result", yearsYounger: "Years younger",
+                needsImprove: "Needs Improvement", yearsOlder: "Years older",
+                bioTrend: "📈 Biological Age Trend", ageDist: "🎯 Age Difference Distribution",
+                historyTitle: "📜 Prediction History", all: "All", younger: "Younger", older: "Older", same: "Same",
+                date: "Date", chronAge: "Chron. Age", bioAge: "Bio. Age", difference: "Difference",
+                bmi: "BMI", sleep: "Sleep", exercise: "Exercise", status: "Status", action: "Action"
+            },
+            kn: {
+                logo: "🧬 ಏಜ್ಲೆನ್ಸ್ ಎಐ", newPrediction: "🔮 ಹೊಸ ಮುನ್ಸೂಚನೆ", logout: "🚪 ನಿರ್ಗಮಿಸಿ",
+                welcomeBack: "ಸ್ವಾಗತ", welcomeMsg: "ನಿಮ್ಮ ಜೈವಿಕ ವಯಸ್ಸಿನ ಪ್ರಯಾಣವನ್ನು ಟ್ರ್ಯಾಕ್ ಮಾಡಿ ಮತ್ತು ನಿಮ್ಮ ಜೀವನಶೈಲಿಯ ಆಯ್ಕೆಗಳು ನಿಮ್ಮ ಆರೋಗ್ಯದ ಮೇಲೆ ಹೇಗೆ ಪರಿಣಾಮ ಬೀರುತ್ತವೆ ಎಂಬುದನ್ನು ನೋಡಿ.",
+                totalPred: "ಒಟ್ಟು ಮುನ್ಸೂಚನೆಗಳು", lifetimePred: "ಜೀವಮಾನದ ಮುನ್ಸೂಚನೆಗಳು", avgDiff: "ಸರಾಸರಿ ವಯಸ್ಸಿನ ವ್ಯತ್ಯಾಸ",
+                years: "ವರ್ಷಗಳು", bestResult: "ಉತ್ತಮ ಫಲಿತಾಂಶ", yearsYounger: "ವರ್ಷಗಳು ಕಿರಿಯ",
+                needsImprove: "ಸುಧಾರಣೆ ಅಗತ್ಯ", yearsOlder: "ವರ್ಷಗಳು ಹಿರಿಯ",
+                bioTrend: "📈 ಜೈವಿಕ ವಯಸ್ಸಿನ ಪ್ರವೃತ್ತಿ", ageDist: "🎯 ವಯಸ್ಸಿನ ವ್ಯತ್ಯಾಸ ವಿತರಣೆ",
+                historyTitle: "📜 ಮುನ್ಸೂಚನೆ ಇತಿಹಾಸ", all: "ಎಲ್ಲಾ", younger: "ಕಿರಿಯ", older: "ಹಿರಿಯ", same: "ಸಮಾನ",
+                date: "ದಿನಾಂಕ", chronAge: "ಕಾಲಾನುಕ್ರಮದ ವಯಸ್ಸು", bioAge: "ಜೈವಿಕ ವಯಸ್ಸು", difference: "ವ್ಯತ್ಯಾಸ",
+                bmi: "ಬಿಎಂಐ", sleep: "ನಿದ್ರೆ", exercise: "ವ್ಯಾಯಾಮ", status: "ಸ್ಥಿತಿ", action: "ಕ್ರಿಯೆ"
+            },
+            hi: {
+                logo: "🧬 एजलेंस एआई", newPrediction: "🔮 नई भविष्यवाणी", logout: "🚪 लॉगआउट",
+                welcomeBack: "वापसी पर स्वागत है", welcomeMsg: "अपनी जैविक आयु यात्रा को ट्रैक करें और देखें कि आपकी जीवनशैली के विकल्प आपके स्वास्थ्य को कैसे प्रभावित करते हैं।",
+                totalPred: "कुल भविष्यवाणियाँ", lifetimePred: "जीवनकाल की भविष्यवाणियाँ", avgDiff: "औसत आयु अंतर",
+                years: "वर्ष", bestResult: "सर्वोत्तम परिणाम", yearsYounger: "वर्ष छोटे",
+                needsImprove: "सुधार की आवश्यकता", yearsOlder: "वर्ष बड़े",
+                bioTrend: "📈 जैविक आयु प्रवृत्ति", ageDist: "🎯 आयु अंतर वितरण",
+                historyTitle: "📜 भविष्यवाणी इतिहास", all: "सभी", younger: "छोटे", older: "बड़े", same: "समान",
+                date: "तारीख", chronAge: "कालानुक्रमिक आयु", bioAge: "जैविक आयु", difference: "अंतर",
+                bmi: "बीएमआई", sleep: "नींद", exercise: "व्यायाम", status: "स्थिति", action: "कार्रवाई"
+            }
+        };
+
+        var currentLang = localStorage.getItem('lang') || 'en';
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            var t = translations[lang];
+            
+            document.getElementById('logoText').innerHTML = t.logo;
+            document.getElementById('newPredictionText').innerHTML = t.newPrediction;
+            document.getElementById('logoutText').innerHTML = t.logout;
+            document.getElementById('welcomeBackText').innerHTML = t.welcomeBack;
+            document.getElementById('welcomeMsgText').innerHTML = t.welcomeMsg;
+            document.getElementById('totalPredLabel').innerHTML = t.totalPred;
+            document.getElementById('lifetimePredText').innerHTML = t.lifetimePred;
+            document.getElementById('avgDiffLabel').innerHTML = t.avgDiff;
+            document.getElementById('yearsUnit').innerHTML = t.years;
+            document.getElementById('bestResultLabel').innerHTML = t.bestResult;
+            document.getElementById('yearsYoungerText').innerHTML = t.yearsYounger;
+            document.getElementById('needsImproveLabel').innerHTML = t.needsImprove;
+            document.getElementById('yearsOlderText').innerHTML = t.yearsOlder;
+            document.getElementById('bioTrendText').innerHTML = t.bioTrend;
+            document.getElementById('ageDistText').innerHTML = t.ageDist;
+            document.getElementById('historyTitle').innerHTML = t.historyTitle;
+            document.getElementById('allBtn').innerHTML = t.all;
+            document.getElementById('youngerBtn').innerHTML = t.younger;
+            document.getElementById('olderBtn').innerHTML = t.older;
+            document.getElementById('sameBtn').innerHTML = t.same;
+            document.getElementById('dateHeader').innerHTML = t.date;
+            document.getElementById('chronHeader').innerHTML = t.chronAge;
+            document.getElementById('bioHeader').innerHTML = t.bioAge;
+            document.getElementById('diffHeader').innerHTML = t.difference;
+            document.getElementById('bmiHeader').innerHTML = t.bmi;
+            document.getElementById('sleepHeader').innerHTML = t.sleep;
+            document.getElementById('exerciseHeader').innerHTML = t.exercise;
+            document.getElementById('statusHeader').innerHTML = t.status;
+            document.getElementById('actionHeader').innerHTML = t.action;
+            
+            document.querySelectorAll('.lang-btn').forEach(function(btn) {
+                btn.classList.remove('active');
+                if(btn.getAttribute('data-lang') === lang) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // Dashboard data
+        var predictions = [];
+        var currentFilter = 'all';
+        
+        try {
+            predictions = JSON.parse('{{ history | tojson | safe }}');
+        } catch(e) {
+            predictions = [];
+        }
+        
+        function deletePrediction(id) {
+            if(confirm("Delete this prediction?")) {
+                fetch("/delete-prediction/" + id, { method: "DELETE" })
+                .then(function(response) { return response.json(); })
+                .then(function(data) {
+                    if(data.success) { location.reload(); }
+                    else { alert("Failed to delete"); }
+                });
+            }
+        }
+        
+        function updateStats() {
+            var total = predictions.length;
+            if(total === 0) {
+                document.getElementById("totalPredictions").innerText = "0";
+                document.getElementById("avgDiffValue").innerText = "0";
+                document.getElementById("bestResult").innerHTML = "N/A";
+                document.getElementById("worstResult").innerHTML = "N/A";
+                document.getElementById("avgDiffTrend").innerHTML = "No data";
+                return;
+            }
+            
+            var totalDiff = 0, bestDiff = 1000, worstDiff = -1000;
+            for(var i = 0; i < predictions.length; i++) {
+                var diff = predictions[i].biological_age - predictions[i].chronological_age;
+                totalDiff += diff;
+                if(diff < bestDiff) bestDiff = diff;
+                if(diff > worstDiff) worstDiff = diff;
+            }
+            
+            var avgDiff = totalDiff / total;
+            document.getElementById("totalPredictions").innerText = total;
+            document.getElementById("avgDiffValue").innerText = avgDiff.toFixed(1);
+            if(bestDiff !== 1000) document.getElementById("bestResult").innerHTML = Math.abs(bestDiff).toFixed(1) + " yrs";
+            if(worstDiff !== -1000) document.getElementById("worstResult").innerHTML = worstDiff.toFixed(1) + " yrs";
+            
+            var trendElem = document.getElementById("avgDiffTrend");
+            if(avgDiff < 0) {
+                trendElem.innerHTML = "📉 " + Math.abs(avgDiff).toFixed(1) + " years younger";
+                trendElem.className = "stat-trend trend-good";
+            } else if(avgDiff > 0) {
+                trendElem.innerHTML = "📈 " + avgDiff.toFixed(1) + " years older";
+                trendElem.className = "stat-trend trend-bad";
+            } else {
+                trendElem.innerHTML = "✅ Matching your age";
+            }
+        }
+        
+        function renderHistory() {
+            var tbody = document.getElementById("historyBody");
+            var filtered = [];
+            
+            if(currentFilter === "all") {
+                filtered = predictions;
+            } else if(currentFilter === "younger") {
+                for(var i = 0; i < predictions.length; i++) {
+                    if(predictions[i].biological_age < predictions[i].chronological_age) {
+                        filtered.push(predictions[i]);
+                    }
+                }
+            } else if(currentFilter === "older") {
+                for(var i = 0; i < predictions.length; i++) {
+                    if(predictions[i].biological_age > predictions[i].chronological_age) {
+                        filtered.push(predictions[i]);
+                    }
+                }
+            } else if(currentFilter === "same") {
+                for(var i = 0; i < predictions.length; i++) {
+                    if(predictions[i].biological_age === predictions[i].chronological_age) {
+                        filtered.push(predictions[i]);
+                    }
+                }
+            }
+            
+            if(filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" class="empty-state"><div class="empty-state-icon">📭</div><div>No predictions found</div><a href="/predictor">Make your first prediction →</a></td></tr>';
+                return;
+            }
+            
+            var html = "";
+            for(var i = 0; i < filtered.length; i++) {
+                var p = filtered[i];
+                var diff = p.biological_age - p.chronological_age;
+                var badgeClass = "";
+                var statusText = "";
+                var diffText = "";
+                
+                if(diff < 0) {
+                    badgeClass = "badge-success";
+                    statusText = "Younger";
+                    diffText = "📉 " + Math.abs(diff).toFixed(1) + " yrs";
+                } else if(diff > 0) {
+                    badgeClass = "badge-danger";
+                    statusText = "Older";
+                    diffText = "📈 " + diff.toFixed(1) + " yrs";
+                } else {
+                    badgeClass = "badge-warning";
+                    statusText = "Same";
+                    diffText = "✅ 0 yrs";
+                }
+                
+                var date = new Date(p.prediction_date);
+                var dateStr = date.toLocaleDateString();
+                
+                html += "<tr>";
+                html += "<td>" + dateStr + "</td>";
+                html += "<td>" + p.chronological_age + "</td>";
+                html += "<td>" + p.biological_age.toFixed(1) + "</td>";
+                html += "<td>" + diffText + "</td>";
+                html += "<td>" + (p.bmi ? p.bmi.toFixed(1) : "N/A") + "</td>";
+                html += "<td>" + (p.sleep_hours ? p.sleep_hours + "h" : "N/A") + "</td>";
+                html += "<td>" + (p.exercise_frequency ? p.exercise_frequency + " days" : "N/A") + "</td>";
+                html += "<td><span class=\"badge " + badgeClass + "\">" + statusText + "</span></td>";
+                html += "<td><button class=\"delete-btn\" onclick=\"deletePrediction(\'" + p._id + "\')\">🗑️</button></td>";
+                html += "</tr>";
+            }
+            tbody.innerHTML = html;
+        }
+        
+        function filterHistory(filter) {
+            currentFilter = filter;
+            var btns = document.querySelectorAll(".filter-btn");
+            for(var i = 0; i < btns.length; i++) {
+                btns[i].classList.remove("active");
+                if(btns[i].getAttribute("data-filter") === filter) {
+                    btns[i].classList.add("active");
+                }
+            }
+            renderHistory();
+        }
+        
+        // Render charts
+        function renderCharts() {
+            if (predictions.length === 0) {
+                return;
+            }
+            
+            // Trend Chart
+            var ctx1 = document.getElementById('trendChart').getContext('2d');
+            var dates = [];
+            var bioAges = [];
+            var chronAges = [];
+            
+            for (var i = predictions.length - 1; i >= 0; i--) {
+                var p = predictions[i];
+                var date = new Date(p.prediction_date);
+                dates.push(date.toLocaleDateString());
+                bioAges.push(p.biological_age);
+                chronAges.push(p.chronological_age);
+            }
+            
+            new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Biological Age',
+                        data: bioAges,
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }, {
+                        label: 'Chronological Age',
+                        data: chronAges,
+                        borderColor: '#dc3545',
+                        backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                        tension: 0.4,
+                        borderDash: [5, 5]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+            
+            // Distribution Chart
+            var ctx2 = document.getElementById('distributionChart').getContext('2d');
+            var younger = 0;
+            var older = 0;
+            var same = 0;
+            
+            for (var i = 0; i < predictions.length; i++) {
+                var diff = predictions[i].biological_age - predictions[i].chronological_age;
+                if (diff < 0) younger++;
+                else if (diff > 0) older++;
+                else same++;
+            }
+            
+            new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Younger (' + younger + ')', 'Older (' + older + ')', 'Same (' + same + ')'],
+                    datasets: [{
+                        data: [younger, older, same],
+                        backgroundColor: ['#28a745', '#dc3545', '#ffc107'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Initialize dashboard
+        updateStats();
+        renderHistory();
+        renderCharts();
+    </script> 
+</body>
+</html>
